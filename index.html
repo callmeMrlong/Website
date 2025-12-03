@@ -341,19 +341,23 @@
 // Retrieved 2025-12-03, License - CC BY-SA 3.0
 
 <SCRIPT LANGUAGE="JavaScript">
-    function GetCookie(cookie) {
-        var arg=name+"=";
-        var alen=arg.length;
-        var clen=document.cookie.length;
-        var i=0;
-        while (i<clen) {
-            var j=i+alen;
-            if (document.cookie.substring(i,j)==arg)
-                return "here";
-            i=document.cookie.indexOf(" ",i)+1;
-            if (i==0) break;
+    function getCookie(c_name) {
+        var c_value = document.cookie;
+        var c_start = c_value.indexOf(" " + c_name + "=");
+        if (c_start == -1) {
+            c_start = c_value.indexOf(c_name + "=");
         }
-        return null;
+        if (c_start == -1) {
+            c_value = null;
+        } else {
+            c_start = c_value.indexOf("=", c_start) + 1;
+            var c_end = c_value.indexOf(";", c_start);
+            if (c_end == -1) {
+                c_end = c_value.length;
+            }
+            c_value = unescape(c_value.substring(c_start, c_end));
+        }
+        return c_value;
     }
     var visit=GetCookie("cookie");
     if (visit==null){
