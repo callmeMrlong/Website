@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Manager</title>
+    <link rel="icon" type="image/x-icon" href="Files/favicon.png">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            display: flex;
+            gap: 30px;
+            max-width: 12000px;
+            margin: 0 auto;
+        }
+
+        .countdown-school-section{
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            width: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 30px;
+        }
+
+        .countdown-school-title{
+            margin-left: 32%;
+            font-weight: bold;
+            color: #ffffff;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .countdown-timer-school {
+            margin-left: 30px;
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffeb3b;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+            font-family: 'Courier New', monospace;
+        }
+    
+
+        .countup-timer-school {
+            margin-left: 30px;
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffeb3b;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+            font-family: 'Courier New', monospace;
+        }
+
+        .countdown-section {
+            height: fit-content;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .timer-bubble {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+          .buttons-section {
+            justify-content: center;
+            display: flex;
+            height: fit-content;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .notes-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .games-section{
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .schedule-section {
+            width: 40%;
+            height: fit-content;
+            max-height: 10;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .current-class {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .countdown-timer {
+            font-size: 4em;
+            font-weight: bold;
+            color: #ffeb3b;
+            margin: 30px 0;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+            font-family: 'Courier New', monospace;
+        }
+
+        .next-class {
+            font-size: 1.5em;
+            opacity: 0.9;
+            margin-top: 20px;
+        }
+
+        .schedule-title {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .class-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .class-item.current {
+            border-left-color: #4caf50;
+            background: rgba(76, 175, 80, 0.3);
+            transform: scale(1.02);
+        }
+
+        .class-item.next {
+            border-left-color: #ff9800;
+            background: rgba(255, 152, 0, 0.2);
+        }
+
+        .class-time {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .class-name {
+            text-align: right;
+            opacity: 0.9;
+        }
+
+        .status {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+
+        .no-class {
+            font-size: 1.5em;
+            opacity: 0.7;
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .notes-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .class-dropdown {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            margin-bottom: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .class-dropdown option {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .notes-textarea {
+            width: 100%;
+            min-height: 300px;
+            font-size: 1em;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(5px);
+            resize: vertical;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.5;
+        }
+
+        .notes-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .notes-textarea:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .save-status {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 0.9em;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .button {
+            display:none;
+            width: 100%;
+            font-size: 1.2em;
+            margin-top: 7.5px;
+            margin-bottom: 7.5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .button:hover {
+            display:none;
+            flex: 1;
+            background: rgba(255, 255, 255, 0.294);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .button:active {
+            display:none;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .countdown-timer {
+                font-size: 2.5em;
+            }
+            
+            .current-class {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="countdown-section">
+            <div class="timer-bubble">
+                <div id="status" class="status"></div>
+                <div id="current-class" class="current-class">Loading...</div>
+                <div id="countdown" class="countdown-timer">--:--</div>
+                <div id="next-class" class="next-class"></div>
+            </div>
+            
+            <div class="notes-section">
+                <div class="notes-title">Class Notes</div>
+                <select id="class-selector" class="class-dropdown">
+                </select>
+                <textarea id="notes-textarea" class="notes-textarea" placeholder="Type your notes for this class here..."></textarea>
+                <div id="save-status" class="save-status">Notes auto-save as you type</div>
+            </div>
+            
+        </div>
+        <div class="schedule-section">
+            <div class="schedule-title">Today's Schedule</div>
+            <div id="schedule"></div>
+        </div>
+        <div class = "buttons-section" id = "buttons-section">
+        <div>
+            <button id="games-button" class="button" onclick="openGames()">🎮 Play Games</button>
+        </div>
+        <div> 
+            <button onclick="updateSchedule()" class="button" id = "update-schedule-button">Import Schedule</button>
+        </div>
+        
+        </div>
+    </div>
+
+    <script>
+        function toggleElementById(id) {
+        var x = document.getElementById(id);
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+        }
+        function toggleElements() {
+            toggleElementById('update-schedule-button')
+            toggleElementById('buttons-section')
+        //toggleElemntById('Id')
+        }
+        let keysPressed = {};
+        document.addEventListener('keydown', (event) => {
+            keysPressed[event.key] = true;
+
+        if (keysPressed['t']) {
+                if (keysPressed['l']){
+                    toggleElementById('games-button');}
+        } else if (keysPressed['`']) {
+                toggleElements();
+        }
+        });
+        document.addEventListener('keyup', (event) => {
+        delete keysPressed[event.key];
+        });
+        toggleElements()//this makes it hidden when the project starts
+        toggleElementById('games-button')
+        const Periods = {
+                    "A": "Human Geography - 2 (A)" ,
+                    "B": "Study Hall - 5 (B)" ,
+                    "C": "Honors Geometry - 2 (C)" ,
+                    "D": "Intro to Python Programming - 1 (D)" ,
+                    "E": "Honors Biology - 1 (E)" ,
+                    "F": "English 9 - 3 (F)" ,
+                    "G": "Spanish 2 - 1 (G)" 
+        }
+        const defaultSchedules = {
+            // Monday (0 = Sunday, 1 = Monday, etc.)
+            1: [
+                { time: "8:00 AM - 8:45 AM", name: Periods['A'], start: "08:00", end: "08:45" },
+                { time: "8:50 AM - 9:35 AM", name: Periods['B'], start: "08:50", end: "09:35" },
+                { time: "9:40 AM - 10:25 AM", name: Periods['C'], start: "09:40", end: "10:25" },
+                { time: "10:30 AM - 11:10 AM", name: "Programming - 1 (Programming)", start: "10:30", end: "11:10" },
+                { time: "11:15 AM - 12:00 PM", name: Periods['D'], start: "11:15", end: "12:00" },
+                { time: "12:00 PM - 12:30 PM", name: "Lunch - 1 (Lunch)", start: "12:00", end: "12:30" },
+                { time: "12:35 PM - 1:25 PM", name: Periods['E'], start: "12:35", end: "13:25" },
+                { time: "1:30 PM - 2:20 PM", name: Periods['F'], start: "13:30", end: "14:20" },
+                { time: "2:25 PM - 3:15 PM", name: Periods['G'], start: "14:25", end: "15:15" }
+            ],
+            // Tuesday
+            2: [
+                { time: "8:00 AM - 8:50 AM", name: Periods['B'], start: "08:00", end: "08:50" },
+                { time: "8:55 AM - 9:45 AM", name: Periods['A'], start: "08:55", end: "09:45" },
+                { time: "9:50 AM - 10:10 AM", name: "Programming - 1 (Programming)", start: "09:50", end: "10:10" },
+                { time: "10:15 AM - 11:05 AM", name: Periods['C'], start: "10:15", end: "11:05" },
+                { time: "11:10 AM - 12:00 PM", name: Periods['D'], start: "11:10", end: "12:00" },
+                { time: "12:00 PM - 12:30 PM", name: "Lunch - 1 (Lunch)", start: "12:00", end: "12:30" },
+                { time: "12:35 PM - 1:25 PM", name: Periods['G'], start: "12:35", end: "13:25" },
+                { time: "1:30 PM - 2:20 PM", name: Periods['E'], start: "13:30", end: "14:20" },
+                { time: "2:25 PM - 3:15 PM", name: Periods['F'], start: "14:25", end: "15:15" }
+            ],
+            // Wednesday
+            3: [
+                { time: "8:30 AM - 9:20 AM", name: Periods['A'], start: "08:30", end: "09:20" },
+                { time: "9:25 AM - 10:15 AM", name: Periods['B'], start: "09:25", end: "10:15" },
+                { time: "10:20 AM - 11:10 AM", name: Periods['C'], start: "10:20", end: "11:10" },
+                { time: "11:15 AM - 12:05 PM", name: Periods['D'], start: "11:15", end: "12:05" },
+                { time: "12:05 PM - 12:30 PM", name: "Lunch - 1 (Lunch)", start: "12:05", end: "12:30" },
+                { time: "12:35 PM - 1:25 PM", name: Periods['F'], start: "12:35", end: "13:25" },
+                { time: "1:30 PM - 2:20 PM", name: Periods['G'], start: "13:30", end: "14:20" },
+                { time: "2:25 PM - 3:15 PM", name: Periods['E'], start: "14:25", end: "15:15" }
+            ],
+            // Thursday
+            4: [
+                { time: "8:00 AM - 8:50 AM", name: Periods['B'], start: "08:00", end: "08:50" },
+                { time: "8:55 AM - 9:45 AM", name: Periods['A'], start: "08:55", end: "09:45" },
+                { time: "9:50 AM - 10:10 AM", name: "Programming - 1 (Programming)", start: "09:50", end: "10:10" },
+                { time: "10:15 AM - 11:05 AM", name: Periods['C'], start: "10:15", end: "11:05" },
+                { time: "11:10 AM - 12:00 PM", name: Periods['D'], start: "11:10", end: "12:00" },
+                { time: "12:00 PM - 12:30 PM", name: "Lunch - 1 (Lunch)", start: "12:00", end: "12:30" },
+                { time: "12:35 PM - 1:25 PM", name: Periods['G'], start: "12:35", end: "13:25" },
+                { time: "1:30 PM - 2:20 PM", name: Periods['E'], start: "13:30", end: "14:20" },
+                { time: "2:25 PM - 3:15 PM", name: Periods['F'], start: "14:25", end: "15:15" }
+            ],
+            // Friday
+            5: [
+                { time: "8:00 AM - 8:45 AM", name: Periods['A'], start: "08:00", end: "08:45" },
+                { time: "8:50 AM - 9:35 AM", name: Periods['B'], start: "08:50", end: "09:35" },
+                { time: "9:40 AM - 10:25 AM", name: Periods['C'], start: "09:40", end: "10:25" },
+                { time: "10:30 AM - 11:10 AM", name: "Programming - 1 (Programming)", start: "10:30", end: "11:10" },
+                { time: "11:15 AM - 12:00 PM", name: Periods['D'], start: "11:15", end: "12:00" },
+                { time: "12:00 PM - 12:30 PM", name: "Lunch - 1 (Lunch)", start: "12:00", end: "12:30" },
+                { time: "12:35 PM - 1:25 PM", name: Periods['E'], start: "12:35", end: "13:25" },
+                { time: "1:30 PM - 2:20 PM", name: Periods['F'], start: "13:30", end: "14:20" },
+                { time: "2:25 PM - 3:15 PM", name: Periods['G'], start: "14:25", end: "15:15" }
+            ]
+        };
+
+        // Define class periods in order
+        const classPeriods = [
+            { period: "A", name: Periods['A'] },
+            { period: "B", name: Periods['B'] },
+            { period: "C", name: Periods['C'] },
+            { period: "Programming", name: "Programming - 1 (Programming)" },
+            { period: "D", name: Periods['D'] },
+            { period: "E", name: Periods['E'] },
+            { period: "F", name: Periods['F'] },
+            { period: "G", name: Periods['G'] }
+        ];
+
+        // Notes functionality
+        let classNotes = {};
+        let currentSelectedClass = '';
+
+        function parseTime(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            return hours * 3600 + minutes * 60;
+        }
+
+        function getCurrentTime() {
+            const now = new Date();
+            return now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+        }
+
+        function formatTime(totalSeconds) {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            
+            if (hours > 0) {
+                return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            } else {
+                return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+
+        function initializeNotes() {
+            // Load saved notes from browser storage
+            const savedNotes = JSON.parse(localStorage.getItem('classNotes')) || {};
+            classNotes = savedNotes;
+
+            // Initialize notes for each class if they don't exist
+            classPeriods.forEach(classInfo => {
+                if (!classNotes[classInfo.name]) {
+                    classNotes[classInfo.name] = '';
+                }
+            });
+
+            // Load saved selected class or default to first class
+            currentSelectedClass = localStorage.getItem('currentSelectedClass') || classPeriods[0].name;
+
+            // Populate dropdown
+            const selector = document.getElementById('class-selector');
+            classPeriods.forEach((classInfo, index) => {
+                const option = document.createElement('option');
+                option.value = classInfo.name;
+                option.textContent = `${classInfo.period} Period:` //${classInfo.name.split(' (')[0]}`;
+                selector.appendChild(option);
+            });
+
+            // Set the dropdown to the saved selection
+            selector.value = currentSelectedClass;
+
+            // Load initial notes
+            loadNotes();
+
+            // Add event listeners
+            document.getElementById('class-selector').addEventListener('change', switchClass);
+            document.getElementById('notes-textarea').addEventListener('input', saveNotes);
+        }
+
+        function switchClass() {
+            const selector = document.getElementById('class-selector');
+            currentSelectedClass = selector.value;
+            
+            // Save the selected class to localStorage
+            localStorage.setItem('currentSelectedClass', currentSelectedClass);
+            
+            loadNotes();
+        }
+
+        function loadNotes() {
+            const textarea = document.getElementById('notes-textarea');
+            textarea.value = classNotes[currentSelectedClass] || '';
+        }
+
+        function saveNotes() {
+            const textarea = document.getElementById('notes-textarea');
+            classNotes[currentSelectedClass] = textarea.value;
+            
+            // Save notes to localStorage for persistence
+            localStorage.setItem('classNotes', JSON.stringify(classNotes));
+            
+            // Show save confirmation briefly
+            const saveStatus = document.getElementById('save-status');
+            saveStatus.textContent = 'Notes saved ✓';
+            saveStatus.style.opacity = '1';
+            
+            setTimeout(() => {
+                saveStatus.textContent = 'Notes auto-save as you type';
+                saveStatus.style.opacity = '0.8';
+            }, 2000);
+        }
+
+        function openGames() {
+            // List of HTML games with relative paths - these will work anywhere the Website folder is placed
+            const games = [
+                {
+                    name: "Slope Game",
+                    url: "./Files/Extra/Games/slopeoffline.html",
+                    description: '"The Green Ball Game"'
+                }, {
+                    name: "Cubefield",
+                    url: "./Files/Extra/Games/cubefield/index.html",
+                    description: "Runner type game"
+                }, {
+                    name: "Subway Surfers",
+                    url: "./Files/Extra/Games/subwaysurfers/index.html",
+                    description: "Can take a while to load sometimes"
+                }, {
+                    name: "Tower Scaper",
+                    url: "./Files/Extra/Games/townscaper/index.html",
+                    description: "Building sim type game"
+                }, {
+                    name: "Tetris",
+                    url: "./Files/Extra/Games/tetris/index.html",
+                    description: "Its knock off Tetris, but not bad"
+                }, {
+                    name: "Flappy Bird",
+                    url: "./Files/Extra/Games/flappybird/index.html",
+                    description: "Not a remake, its real"
+                }, {
+                    name: "Under Run",
+                    url: "./Files/Extra/Games/underrun/index.html",
+                    description: "Unique game"
+                }, {
+                    name: "Breakout",
+                    url: "./Files/Extra/Games/breakout/index.html",
+                    description: "Knock off Atari Breakout"
+                }, {
+                    name: "The Worlds Hardest Game",
+                    url: "./Files/Extra/Games/the-worlds-hardest-game.html",
+                    description: "Its really hard"
+                }, {
+                    name: "Wolfenstein 3D",
+                    url: "./Files/Extra/Games/wolfenstein/index.html",
+                    description: "Super old game like doom"
+                }
+            ];
+
+            let gamesList = "Choose a game:\n\n";
+            games.forEach((game, index) => {
+                gamesList += `${index + 1}. ${game.name} - ${game.description}\n`;
+            });
+            
+            const choice = prompt(gamesList + "\nEnter the number of the game you want to play:");
+            const gameIndex = parseInt(choice) - 1;
+            
+            if (gameIndex >= 0 && gameIndex < games.length) {
+                window.open(games[gameIndex].url, '_blank');
+            }
+        }
+        function updateSchedule() {
+            if (!confirm("Import Schedule\n\nEnter class names for each period. Programming and Lunch stay the same.\n\nContinue?")) return;
+            
+            let periodInputs = {};
+            ['A', 'B', 'C', 'D', 'E', 'F', 'G'].forEach(p => {
+                const name = prompt(`Enter class name for Period ${p}:\n(Leave blank to keep default)`);
+                if (name && name.trim()) periodInputs[p] = name.trim();
+            });
+            
+            if (Object.keys(periodInputs).length === 0) {
+                alert("No classes entered. Cancelled.");
+                return;
+            }
+            
+            let newSchedules = {};
+            for (let day = 1; day <= 5; day++) {
+                newSchedules[day] = defaultSchedules[day].map(slot => {
+                    const match = slot.name.match(/\(([A-G])\)$/);
+                    if (match && periodInputs[match[1]]) {
+                        return { ...slot, name: `${periodInputs[match[1]]} (${match[1]})` };
+                    }
+                    return slot;
+                });
+            }
+            
+            localStorage.setItem('customSchedules', JSON.stringify(newSchedules));
+            
+            let newPeriods = [];
+            let seen = new Set();
+            newSchedules[1].forEach(item => {
+                if (!item.name.includes('Lunch') && !item.name.includes('Programming') && !seen.has(item.name)) {
+                    const match = item.name.match(/\(([A-G])\)$/);
+                    newPeriods.push({ period: match ? match[1] : item.name[0], name: item.name });
+                    seen.add(item.name);
+                }
+            });
+            newSchedules[1].forEach(item => {
+                if ((item.name.includes('Programming') || item.name.includes('Lunch')) && !seen.has(item.name)) {
+                    newPeriods.push({ period: item.name.includes('Programming') ? 'Programming' : 'Lunch', name: item.name });
+                    seen.add(item.name);
+                }
+            });
+            
+            let classPeriods = newPeriods;
+            classPeriods.forEach(c => { if (!classNotes[c.name]) classNotes[c.name] = ''; });
+            
+            rebuildNotesDropdown();
+            updateCountdown();
+            alert("Schedule updated successfully!");
+        }
+
+        function resetSchedule() {
+            if (!confirm("Reset to default schedule?")) return;
+            localStorage.removeItem('customSchedules');
+            classPeriods = [
+                { period: "A", name: "Human Geography - 2 (A)" },
+                { period: "B", name: "Study Hall - 5 (B)" },
+                { period: "C", name: "Honors Geometry - 2 (C)" },
+                { period: "Programming", name: "Programming - 1 (Programming)" },
+                { period: "D", name: "Intro to Python Programming - 1 (D)" },
+                { period: "E", name: "Honors Biology - 1 (E)" },
+                { period: "F", name: "English 9 - 3 (F)" },
+                { period: "G", name: "Spanish 2 - 1 (G)" }
+            ];
+            rebuildNotesDropdown();
+            updateCountdown();
+            alert("Schedule reset successfully!");
+        }
+        function updateCountdown() {
+            const now = new Date();
+            const dayOfWeek = now.getDay();
+            const currentTime = getCurrentTime();
+            
+            // Check if custom schedule exists
+            const customSchedules = JSON.parse(localStorage.getItem('customSchedules'));
+            const todaySchedule = customSchedules ? customSchedules[dayOfWeek] : schedules[dayOfWeek];
+            
+            if (!todaySchedule) {
+                document.getElementById('status').textContent = 'No classes today!';
+                document.getElementById('current-class').textContent = 'Weekend';
+                document.getElementById('countdown').textContent = 'Enjoy!';
+                document.getElementById('next-class').textContent = '';
+                document.getElementById('schedule').innerHTML = '<div class="no-class">No classes scheduled for today</div>';
+                return;
+            }
+
+            // Display today's schedule
+            let scheduleHTML = '';
+            let currentClassIndex = -1;
+            let nextClassIndex = -1;
+
+            todaySchedule.forEach((classItem, index) => {
+                const startTime = parseTime(classItem.start);
+                const endTime = parseTime(classItem.end);
+                
+                let classStatus = '';
+                
+                if (currentTime >= startTime && currentTime < endTime) {
+                    currentClassIndex = index;
+                    classStatus = 'current';
+                } else if (currentTime < startTime && nextClassIndex === -1) {
+                    nextClassIndex = index;
+                    classStatus = 'next';
+                }
+                
+                scheduleHTML += `
+                    <div class="class-item ${classStatus}">
+                        <div class="class-time">${classItem.time}</div>
+                        <div class="class-name">${classItem.name}</div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('schedule').innerHTML = scheduleHTML;
+
+            // Update countdown
+            if (currentClassIndex !== -1) {
+                // Currently in a class
+                const currentClass = todaySchedule[currentClassIndex];
+                const endTime = parseTime(currentClass.end);
+                const timeLeft = endTime - currentTime;
+                
+                document.getElementById('status').textContent = 'Currently in class:';
+                document.getElementById('current-class').textContent = currentClass.name;
+                document.getElementById('countdown').textContent = formatTime(timeLeft);
+                
+                if (currentClassIndex + 1 < todaySchedule.length) {
+                    const nextClass = todaySchedule[currentClassIndex + 1];
+                    document.getElementById('next-class').textContent = `Next: ${nextClass.name}`;
+                } else {
+                    document.getElementById('next-class').textContent = 'Last class of the day!';
+                }
+            } else if (nextClassIndex !== -1) {
+                // Between classes or before first class
+                const nextClass = todaySchedule[nextClassIndex];
+                const startTime = parseTime(nextClass.start);
+                const timeUntil = startTime - currentTime;
+                
+                document.getElementById('status').textContent = 'Next class starts in:';
+                document.getElementById('current-class').textContent = nextClass.name;
+                document.getElementById('countdown').textContent = formatTime(timeUntil);
+                document.getElementById('next-class').textContent = `Starts at ${nextClass.time.split(' - ')[0]}`;
+            } else {
+                // All classes are done for the day
+                document.getElementById('status').textContent = 'All classes done!';
+                document.getElementById('current-class').textContent = 'Free time';
+                document.getElementById('countdown').textContent = 'Done!';
+                document.getElementById('next-class').textContent = 'Enjoy your evening!';
+            }
+        }
+
+        // Console function to update schedule - users can type this in console
+        
+
+        // Function to parse the simple schedule input
+        function parseSimpleScheduleInput(input) {
+            // Default time slots that stay the same
+            const timeSlots = [
+                { time: "8:00 AM - 8:45 AM", start: "08:00", end: "08:45" },
+                { time: "8:50 AM - 9:35 AM", start: "08:50", end: "09:35" },
+                { time: "9:40 AM - 10:25 AM", start: "09:40", end: "10:25" },
+                { time: "10:30 AM - 11:10 AM", start: "10:30", end: "11:10" },
+                { time: "11:15 AM - 12:00 PM", start: "11:15", end: "12:00" },
+                { time: "12:00 PM - 12:30 PM", start: "12:00", end: "12:30" },
+                { time: "12:35 PM - 1:25 PM", start: "12:35", end: "13:25" },
+                { time: "1:30 PM - 2:20 PM", start: "13:30", end: "14:20" },
+                { time: "2:25 PM - 3:15 PM", start: "14:25", end: "15:15" }
+            ];
+            
+            const lines = input.split('\n').filter(line => line.trim());
+            const schedulesByDay = {};
+            
+            const dayNames = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+            const dayNumbers = [1, 2, 3, 4, 5];
+            
+            for (let i = 0; i < lines.length && i < 5; i++) {
+                const line = lines[i].trim();
+                
+                // Find day name and extract classes
+                let classes = [];
+                
+                // Look for day name followed by colon
+                const dayMatch = line.match(/^(monday|tuesday|wednesday|thursday|friday):\s*(.+)/i);
+                if (dayMatch) {
+                    classes = dayMatch[2].split(',').map(cls => cls.trim());
+                } else {
+                    // If no day name, assume it's just a list of classes
+                    classes = line.split(',').map(cls => cls.trim());
+                }
+                
+                // Build schedule for this day
+                const daySchedule = [];
+                for (let j = 0; j < Math.min(classes.length, timeSlots.length); j++) {
+                    if (classes[j]) {
+                        daySchedule.push({
+                            time: timeSlots[j].time,
+                            name: classes[j],
+                            start: timeSlots[j].start,
+                            end: timeSlots[j].end
+                        });
+                    }
+                }
+                
+                schedulesByDay[dayNumbers[i]] = daySchedule;
+            }
+            
+            console.log("Parsed schedule:", schedulesByDay);
+            return schedulesByDay;
+        }
+
+        // Helper function to convert 12-hour time to 24-hour format
+        function convertTo24Hour(time12h) {
+            const [time, modifier] = time12h.split(/\s*(AM|PM)/i);
+            let [hours, minutes] = time.split(':');
+            
+            if (hours === '12') {
+                hours = '00';
+            }
+            if (modifier.toUpperCase() === 'PM') {
+                hours = parseInt(hours, 10) + 12;
+            }
+            
+            return `${hours.toString().padStart(2, '0')}:${minutes}`;
+        }
+
+        // Function to update class periods for the notes dropdown
+        function updateClassPeriods(schedules) {
+            const allClasses = new Set();
+            
+            // Collect all unique class names
+            Object.values(schedules).forEach(daySchedule => {
+                daySchedule.forEach(classItem => {
+                    allClasses.add(classItem.name);
+                });
+            });
+            
+            // Update the global classPeriods array
+            window.classPeriods = Array.from(allClasses).map((className, index) => ({
+                period: String.fromCharCode(65 + index), // A, B, C, etc.
+                name: className
+            }));
+            
+            // Rebuild the dropdown
+            const selector = document.getElementById('class-selector');
+            selector.innerHTML = '';
+            
+            window.classPeriods.forEach((classInfo, index) => {
+                const option = document.createElement('option');
+                option.value = classInfo.name;
+                option.textContent = `Period ${classInfo.period}: ${classInfo.name.split(' (')[0]}`;
+                selector.appendChild(option);
+            });
+            
+            // Initialize notes for new classes
+            window.classPeriods.forEach(classInfo => {
+                if (!classNotes[classInfo.name]) {
+                    classNotes[classInfo.name] = '';
+                }
+            });
+        }
+
+        // Function to reset to default schedule
+  
+
+
+       
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeNotes();
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        });
+// Set the date we're counting down to
+var countDownDate = new Date("May 22, 2026 15:15:00").getTime();
+
+// Update the count down every 1 second
+var x = setInterval(function() {
+
+  // Get today's date and time
+  var now = new Date().getTime();
+
+  // Find the distance between now and the count down date
+  var distance = countDownDate - now;
+
+  // Time calculations for days, hours, minutes and seconds
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  // Display the result in the element with id="demo"
+  document.getElementById("countdown-school").innerHTML = "Time Left To Serve: " + days + "d " + hours + "h "
+  + minutes + "m " + seconds + "s ";
+
+  // If the count down is finished, write some text
+  if (distance < 0) {
+    clearInterval(x);
+    document.getElementById("countdown-school").innerHTML = "Time Left To Serve: " + "EXPIRED";
+  }
+}, 1000);
+var countDownDate1 = new Date("Aug 12, 2025 8:55:00").getTime();
+
+// Update the count down every 1 second
+var x1 = setInterval(function() {
+
+  // Get today's date and time
+  var now1 = new Date().getTime();
+
+  // Find the distance between now and the count down date
+  var distance1 = now1 - countDownDate1;
+
+  // Time calculations for days, hours, minutes and seconds
+  var days1 = Math.floor(distance1 / (1000 * 60 * 60 * 24));
+  var hours1 = Math.floor((distance1 % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes1 = Math.floor((distance1 % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds1 = Math.floor((distance1 % (1000 * 60)) / 1000);
+
+  // Display the result in the element with id="demo"
+  document.getElementById("countup-school").innerHTML = "Time Served: " + days1 + "d " + hours1 + "h "
+  + minutes1 + "m " + seconds1 + "s ";
+
+  // If the count down is finished, write some text
+  if (distance1 < 0) {
+    clearInterval(x1);
+    document.getElementById("countup-school").innerHTML = "Time Served: " + "EXPIRED";
+  }
+}, 1000);
+</script>
+<div class="countdown-school-section">
+    <h1 class="countdown-school-title"> Prison Sentence Monitor</h1>
+    <div class="countdown-timer-school">
+        <p id="countdown-school" ></p>
+    <div class="countup-timer-school"></div>    
+        <p id="countup-school" ></p>
+    </div>
+</div>
+</body>
+</html>
