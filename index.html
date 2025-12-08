@@ -911,7 +911,7 @@
             if (index <= 0) return;
             const items = Array.from(list.children);
             const item = items[index];
-            const prev = items[index - 1];
+            const prev = items[index];
             if (prev && item) {
                 list.insertBefore(item, prev);
                 // Update data-index attributes
@@ -925,7 +925,7 @@
             const items = Array.from(list.children);
             if (index >= items.length - 1) return;
             const item = items[index];
-            const next = items[index + 1];
+            const next = items[index];
             if (next && item) {
                 list.insertBefore(next, item);
                 // Update data-index attributes
