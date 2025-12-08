@@ -624,54 +624,215 @@
             }
         }
         function updateSchedule() {
-            if (!confirm("Import Schedule\n\nEnter class names for each period. Programming and Lunch stay the same.\n\nContinue?")) return;
+            // Create a simple interface for schedule customization
+            const modalHTML = `
+                <div id="schedule-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 10000;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 20px; max-width: 600px; max-height: 90%; overflow-y: auto; color: white;">
+                        <h2 style="margin-top: 0;">Customize Your Schedule</h2>
+                        
+                        <label style="display: block; margin: 20px 0 10px 0;">
+                            <input type="checkbox" id="include-programming" checked> Include Programming Period
+                        </label>
+                        
+                        <label style="display: block; margin: 10px 0 20px 0;">
+                            <input type="checkbox" id="include-lunch" checked> Include Lunch Period
+                        </label>
+                        
+                        <label style="display: block; margin: 20px 0 10px 0;">
+                            Number of Class Periods:
+                            <input type="number" id="num-periods" min="1" max="10" value="7" style="margin-left: 10px; padding: 5px; border-radius: 5px; border: none; width: 60px;">
+                        </label>
+                        
+                        <div id="period-inputs" style="margin: 20px 0;"></div>
+                        
+                        <div style="margin-top: 30px; display: flex; gap: 10px;">
+                            <button onclick="saveCustomSchedule()" style="flex: 1; padding: 12px; background: #4caf50; border: none; border-radius: 10px; color: white; font-size: 16px; cursor: pointer; font-weight: bold;">Save Schedule</button>
+                            <button onclick="closeScheduleModal()" style="flex: 1; padding: 12px; background: #f44336; border: none; border-radius: 10px; color: white; font-size: 16px; cursor: pointer; font-weight: bold;">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            `;
             
-            let periodInputs = {};
-            ['A', 'B', 'C', 'D', 'E', 'F', 'G'].forEach(p => {
-                const name = prompt(`Enter class name for Period ${p}:\n(Leave blank to keep default)`);
-                if (name && name.trim()) periodInputs[p] = name.trim();
-            });
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
             
-            if (Object.keys(periodInputs).length === 0) {
-                alert("No classes entered. Cancelled.");
-                return;
+            // Generate input fields for periods
+            document.getElementById('num-periods').addEventListener('input', generatePeriodInputs);
+            generatePeriodInputs();
+        }
+        
+        function generatePeriodInputs() {
+            const numPeriods = parseInt(document.getElementById('num-periods').value);
+            const container = document.getElementById('period-inputs');
+            container.innerHTML = '<h3>Class Names:</h3>';
+            
+            for (let i = 1; i <= numPeriods; i++) {
+                const letter = String.fromCharCode(64 + i); // A, B, C, etc.
+                container.innerHTML += `
+                    <div style="margin: 10px 0;">
+                        <label style="display: block; margin-bottom: 5px;">Period ${letter}:</label>
+                        <input type="text" id="period-${letter}" placeholder="e.g., Math, English, Science" style="width: 100%; padding: 8px; border-radius: 5px; border: none;">
+                    </div>
+                `;
+            }
+        }
+        
+        function saveCustomSchedule() {
+            const numPeriods = parseInt(document.getElementById('num-periods').value);
+            const includeProgramming = document.getElementById('include-programming').checked;
+            const includeLunch = document.getElementById('include-lunch').checked;
+            
+            // Collect class names
+            const classNames = {};
+            for (let i = 1; i <= numPeriods; i++) {
+                const letter = String.fromCharCode(64 + i);
+                const input = document.getElementById(`period-${letter}`);
+                if (input && input.value.trim()) {
+                    classNames[letter] = input.value.trim();
+                } else {
+                    alert(`Please enter a name for Period ${letter}`);
+                    return;
+                }
             }
             
-            let newSchedules = {};
-            for (let day = 1; day <= 5; day++) {
-                newSchedules[day] = defaultSchedules[day].map(slot => {
-                    const match = slot.name.match(/\(([A-G])\)$/);
-                    if (match && periodInputs[match[1]]) {
-                        return { ...slot, name: `${periodInputs[match[1]]} (${match[1]})` };
-                    }
-                    return slot;
+            // Save the configuration
+            const config = {
+                numPeriods: numPeriods,
+                includeProgramming: includeProgramming,
+                includeLunch: includeLunch,
+                classNames: classNames
+            };
+            
+            localStorage.setItem('scheduleConfig', JSON.stringify(config));
+            
+            // Rebuild the schedule
+            rebuildScheduleFromConfig(config);
+            
+            closeScheduleModal();
+            alert("Schedule saved successfully!");
+        }
+        
+        function rebuildScheduleFromConfig(config) {
+            // Create new Periods object
+            const newPeriods = {};
+            Object.keys(config.classNames).forEach(letter => {
+                newPeriods[letter] = `${config.classNames[letter]} (${letter})`;
+            });
+            
+            // Build new schedules for each day
+            // This is a simplified version - you can customize times as needed
+            const baseTimes = [
+                { start: "08:00", end: "08:45", time: "8:00 AM - 8:45 AM" },
+                { start: "08:50", end: "09:35", time: "8:50 AM - 9:35 AM" },
+                { start: "09:40", end: "10:25", time: "9:40 AM - 10:25 AM" },
+                { start: "10:30", end: "11:10", time: "10:30 AM - 11:10 AM" },
+                { start: "11:15", end: "12:00", time: "11:15 AM - 12:00 PM" },
+                { start: "12:05", end: "12:30", time: "12:05 PM - 12:30 PM" },
+                { start: "12:35", end: "13:25", time: "12:35 PM - 1:25 PM" },
+                { start: "13:30", end: "14:20", time: "1:30 PM - 2:20 PM" },
+                { start: "14:25", end: "15:15", time: "2:25 PM - 3:15 PM" }
+            ];
+            
+            const newSchedules = {};
+            
+            // Build Monday schedule as example
+            let schedule = [];
+            let timeIndex = 0;
+            
+            Object.keys(newPeriods).forEach(letter => {
+                if (timeIndex < baseTimes.length) {
+                    schedule.push({
+                        time: baseTimes[timeIndex].time,
+                        name: newPeriods[letter],
+                        start: baseTimes[timeIndex].start,
+                        end: baseTimes[timeIndex].end
+                    });
+                    timeIndex++;
+                }
+            });
+            
+            // Add programming if included
+            if (config.includeProgramming && timeIndex < baseTimes.length) {
+                schedule.push({
+                    time: baseTimes[timeIndex].time,
+                    name: "Programming (Programming)",
+                    start: baseTimes[timeIndex].start,
+                    end: baseTimes[timeIndex].end
                 });
+                timeIndex++;
+            }
+            
+            // Add lunch if included
+            if (config.includeLunch && timeIndex < baseTimes.length) {
+                schedule.push({
+                    time: baseTimes[timeIndex].time,
+                    name: "Lunch (Lunch)",
+                    start: baseTimes[timeIndex].start,
+                    end: baseTimes[timeIndex].end
+                });
+                timeIndex++;
+            }
+            
+            // Apply to all weekdays
+            for (let day = 1; day <= 5; day++) {
+                newSchedules[day] = schedule;
             }
             
             localStorage.setItem('customSchedules', JSON.stringify(newSchedules));
             
-            let newPeriods = [];
-            let seen = new Set();
-            newSchedules[1].forEach(item => {
-                if (!item.name.includes('Lunch') && !item.name.includes('Programming') && !seen.has(item.name)) {
-                    const match = item.name.match(/\(([A-G])\)$/);
-                    newPeriods.push({ period: match ? match[1] : item.name[0], name: item.name });
-                    seen.add(item.name);
-                }
-            });
-            newSchedules[1].forEach(item => {
-                if ((item.name.includes('Programming') || item.name.includes('Lunch')) && !seen.has(item.name)) {
-                    newPeriods.push({ period: item.name.includes('Programming') ? 'Programming' : 'Lunch', name: item.name });
-                    seen.add(item.name);
-                }
+            // Update class periods for notes
+            let newClassPeriods = [];
+            Object.keys(newPeriods).forEach(letter => {
+                newClassPeriods.push({ period: letter, name: newPeriods[letter] });
             });
             
-            let classPeriods = newPeriods;
-            classPeriods.forEach(c => { if (!classNotes[c.name]) classNotes[c.name] = ''; });
+            if (config.includeProgramming) {
+                newClassPeriods.push({ period: "Programming", name: "Programming (Programming)" });
+            }
+            if (config.includeLunch) {
+                newClassPeriods.push({ period: "Lunch", name: "Lunch (Lunch)" });
+            }
+            
+            window.classPeriods = newClassPeriods;
+            
+            // Initialize notes for new classes
+            newClassPeriods.forEach(c => { 
+                if (!classNotes[c.name]) classNotes[c.name] = ''; 
+            });
             
             rebuildNotesDropdown();
             updateCountdown();
-            alert("Schedule updated successfully!");
+        }
+        
+        function closeScheduleModal() {
+            const modal = document.getElementById('schedule-modal');
+            if (modal) modal.remove();
+        }
+        
+        function rebuildNotesDropdown() {
+            const selector = document.getElementById('class-selector');
+            selector.innerHTML = '';
+            
+            window.classPeriods.forEach((classInfo) => {
+                const option = document.createElement('option');
+                option.value = classInfo.name;
+                option.textContent = `${classInfo.period} Period`;
+                selector.appendChild(option);
+            });
+            
+            if (window.classPeriods.length > 0) {
+                selector.value = window.classPeriods[0].name;
+                currentSelectedClass = window.classPeriods[0].name;
+                loadNotes();
+            }
+        }
+        
+        // Load saved config on startup
+        function loadSavedSchedule() {
+            const savedConfig = localStorage.getItem('scheduleConfig');
+            if (savedConfig) {
+                const config = JSON.parse(savedConfig);
+                rebuildScheduleFromConfig(config);
+            }
         }
 
         function resetSchedule() {
