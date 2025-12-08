@@ -227,6 +227,18 @@
             background: #2c3e50;
             color: white;
         }
+        .delete-btn {
+    background: #d9534f;
+    color: white;
+    border: none;
+    padding: 2px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.delete-btn:hover {
+    background: #c9302c;
+}
+
 
         .notes-textarea {
             width: 100%;
@@ -887,6 +899,7 @@
                     controls.innerHTML = `
                         <button onclick="moveDayItemUp(${day.num}, ${idx})">↑</button>
                         <button onclick="moveDayItemDown(${day.num}, ${idx})">↓</button>
+                        <button onclick="deleteDayItem(${day.num}, ${idx})" class="delete-btn">🗑</button>
                     `;
 
                     li.appendChild(label);
@@ -898,40 +911,73 @@
                 wrapper.appendChild(container);
             });
         }
+        function deleteDayItem(dayNum, index) {
+    const list = document.getElementById(`day-order-list-${dayNum}`);
+    if (!list) return;
+
+    const items = Array.from(list.children);
+    const item = items[index];
+    if (!item) return;
+
+    item.remove();
+
+    // Refresh all indices + button handlers
+    refreshDayOrderButtons(dayNum);
+}
 
         // Rebuild Day Order UI (used after names/num periods change)
         function regenerateDayOrderUI() {
             // Recreate the day-order UI when checkboxes change
             generateDayOrderUI();
         }
+        function refreshDayOrderButtons(dayNum) {
+        const list = document.getElementById(`day-order-list-${dayNum}`);
+        if (!list) return;
+
+        Array.from(list.children).forEach((li, i) => {
+            li.dataset.index = i;
+            const controls = li.querySelector('.order-controls');
+            controls.innerHTML = `
+                <button onclick="moveDayItemUp(${dayNum}, ${i})">↑</button>
+                <button onclick="moveDayItemDown(${dayNum}, ${i})">↓</button>
+                <button onclick="deleteDayItem(${dayNum}, ${i})" class="delete-btn">🗑</button>
+            `;
+        });
+        }
+
 
         function moveDayItemUp(dayNum, index) {
-            const list = document.getElementById(`day-order-list-${dayNum}`);
-            if (!list) return;
-            if (index <= 0) return;
-            const items = Array.from(list.children);
-            const item = items[index - 1];
-            const prev = items[index - 2];
-            if (prev && item) {
-                list.insertBefore(item, prev);
-                // Update data-index attributes
-                Array.from(list.children).forEach((li, i) => li.dataset.index = i);
-            }
+        const list = document.getElementById(`day-order-list-${dayNum}`);
+        if (!list) return;
+
+        if (index <= 0) return;
+
+        const items = Array.from(list.children);
+        const item = items[index];
+        const prev = items[index - 1];
+
+        if (prev) {
+            list.insertBefore(item, prev);
+            refreshDayOrderButtons(dayNum);  // <-- FIX
+        }
         }
 
         function moveDayItemDown(dayNum, index) {
-            const list = document.getElementById(`day-order-list-${dayNum}`);
-            if (!list) return;
-            const items = Array.from(list.children);
-            if (index >= items.length - 1) return;
-            const item = items[index + 1];
-            const next = items[index + 2];
-            if (next && item) {
-                list.insertBefore(next, item);
-                // Update data-index attributes
-                Array.from(list.children).forEach((li, i) => li.dataset.index = i);
-            }
+        const list = document.getElementById(`day-order-list-${dayNum}`);
+        if (!list) return;
+
+        const items = Array.from(list.children);
+        if (index >= items.length - 1) return;
+
+        const item = items[index];
+        const next = items[index + 1];
+
+        if (next) {
+            list.insertBefore(next, item);
+            refreshDayOrderButtons(dayNum);  // <-- FIX
         }
+        }
+
 
         function saveCustomSchedule() {
             const numPeriods = parseInt(document.getElementById('num-periods').value);
