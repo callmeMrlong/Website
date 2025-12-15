@@ -286,6 +286,94 @@
             display:none;
             transform: translateY(-1px);
         }
+        .theme-editor-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.theme-editor-panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.theme-editor-title {
+    color: #333;
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.theme-control {
+    margin-bottom: 20px;
+}
+
+.theme-control label {
+    display: block;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.theme-control input[type="color"] {
+    width: 100%;
+    height: 50px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.theme-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.theme-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.theme-btn-save {
+    background: #4caf50;
+    color: white;
+}
+
+.theme-btn-reset {
+    background: #ff5722;
+    color: white;
+}
+
+.theme-btn-close {
+    background: #666;
+    color: white;
+}
+
+.theme-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
 
         @media (max-width: 768px) {
             .container {
@@ -333,11 +421,50 @@
         <div> 
             <button onclick="updateSchedule()" class="button" id = "update-schedule-button">Import Schedule</button>
         </div>
+        <div>
+    <button onclick="openThemeEditor()" class="button" id="theme-editor-button">🎨 Edit Theme</button>
+</div>
         
         </div>
     </div>
 
-
+<!-- Theme Editor Overlay -->
+<div id="theme-editor-overlay" class="theme-editor-overlay">
+    <div class="theme-editor-panel">
+        <div class="theme-editor-title">🎨 Theme Editor</div>
+        
+        <div class="theme-control">
+            <label>Background Gradient Start:</label>
+            <input type="color" id="color-gradient-start" value="#667eea">
+        </div>
+        
+        <div class="theme-control">
+            <label>Background Gradient End:</label>
+            <input type="color" id="color-gradient-end" value="#764ba2">
+        </div>
+        
+        <div class="theme-control">
+            <label>Timer Color:</label>
+            <input type="color" id="color-timer" value="#ffeb3b">
+        </div>
+        
+        <div class="theme-control">
+            <label>Current Class Highlight:</label>
+            <input type="color" id="color-current-class" value="#4caf50">
+        </div>
+        
+        <div class="theme-control">
+            <label>Next Class Highlight:</label>
+            <input type="color" id="color-next-class" value="#ff9800">
+        </div>
+        
+        <div class="theme-buttons">
+            <button class="theme-btn theme-btn-save" onclick="saveTheme()">Save Theme</button>
+            <button class="theme-btn theme-btn-reset" onclick="resetTheme()">Reset</button>
+            <button class="theme-btn theme-btn-close" onclick="closeThemeEditor()">Close</button>
+        </div>
+    </div>
+</div>
 <SCRIPT LANGUAGE="JavaScript">
     function getCookie(c_name) {
         var c_value = document.cookie;
@@ -377,6 +504,7 @@
         }
         function toggleElements() {
             toggleElementById('update-schedule-button')
+            toggleElementById('theme-editor-button')
             toggleElementById('buttons-section')
         //toggleElemntById('Id')
         }
@@ -894,6 +1022,7 @@
             initializeNotes();
             updateCountdown();
             setInterval(updateCountdown, 1000);
+            loadTheme();
         });
 // Set the date we're counting down to
 var countDownDate = new Date("May 22, 2026 15:15:00").getTime();
@@ -950,6 +1079,96 @@ var x1 = setInterval(function() {
     document.getElementById("countup-school").innerHTML = "Time Served: " + "EXPIRED";
   }
 }, 1000);
+// Theme Editor Functions
+function openThemeEditor() {
+    document.getElementById('theme-editor-overlay').style.display = 'flex';
+    loadCurrentTheme();
+}
+
+function closeThemeEditor() {
+    document.getElementById('theme-editor-overlay').style.display = 'none';
+}
+
+function loadCurrentTheme() {
+    const savedTheme = JSON.parse(localStorage.getItem('siteTheme'));
+    if (savedTheme) {
+        document.getElementById('color-gradient-start').value = savedTheme.gradientStart;
+        document.getElementById('color-gradient-end').value = savedTheme.gradientEnd;
+        document.getElementById('color-timer').value = savedTheme.timer;
+        document.getElementById('color-current-class').value = savedTheme.currentClass;
+        document.getElementById('color-next-class').value = savedTheme.nextClass;
+    }
+}
+
+function saveTheme() {
+    const theme = {
+        gradientStart: document.getElementById('color-gradient-start').value,
+        gradientEnd: document.getElementById('color-gradient-end').value,
+        timer: document.getElementById('color-timer').value,
+        currentClass: document.getElementById('color-current-class').value,
+        nextClass: document.getElementById('color-next-class').value
+    };
+    
+    localStorage.setItem('siteTheme', JSON.stringify(theme));
+    applyTheme(theme);
+    alert('Theme saved! Your changes are now active.');
+}
+
+function applyTheme(theme) {
+    document.body.style.background = `linear-gradient(135deg, ${theme.gradientStart} 0%, ${theme.gradientEnd} 100%)`;
+    
+    const style = document.createElement('style');
+    style.id = 'custom-theme';
+    const existingStyle = document.getElementById('custom-theme');
+    if (existingStyle) existingStyle.remove();
+    
+    style.textContent = `
+        .countdown-timer, .countdown-timer-school, .countup-timer-school {
+            color: ${theme.timer} !important;
+        }
+        .class-item.current {
+            border-left-color: ${theme.currentClass} !important;
+            background: ${theme.currentClass}4d !important;
+        }
+        .class-item.next {
+            border-left-color: ${theme.nextClass} !important;
+            background: ${theme.nextClass}33 !important;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+function loadTheme() {
+    const savedTheme = JSON.parse(localStorage.getItem('siteTheme'));
+    if (savedTheme) {
+        applyTheme(savedTheme);
+    }
+}
+
+function resetTheme() {
+    if (confirm('Reset to default theme colors?')) {
+        localStorage.removeItem('siteTheme');
+        document.getElementById('color-gradient-start').value = '#667eea';
+        document.getElementById('color-gradient-end').value = '#764ba2';
+        document.getElementById('color-timer').value = '#ffeb3b';
+        document.getElementById('color-current-class').value = '#4caf50';
+        document.getElementById('color-next-class').value = '#ff9800';
+        
+        const customStyle = document.getElementById('custom-theme');
+        if (customStyle) customStyle.remove();
+        document.body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        
+        alert('Theme reset to defaults!');
+    }
+}
+
+// Close theme editor when clicking outside the panel
+document.addEventListener('click', function(e) {
+    const overlay = document.getElementById('theme-editor-overlay');
+    if (e.target === overlay) {
+        closeThemeEditor();
+    }
+});
 </script>
 <div class="countdown-school-section">
     <h1 class="countdown-school-title"> Prison Sentence Monitor (School year Monitor)</h1>
