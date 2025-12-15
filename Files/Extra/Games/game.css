@@ -1,0 +1,142 @@
+/* Reset & Base */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #0f172a; /* Dark Navy */
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* Header */
+header {
+  padding: 10px 20px;
+  background: #1e293b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  flex-wrap: wrap; /* small screens me wrap ho jayega */
+}
+
+header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #38bdf8;
+  text-align: center;
+  letter-spacing: 1px;
+  flex: 1 1 100%; /* mobile pe h1 full width le lega */
+  margin-bottom: 8px;
+}
+
+/* Buttons (top-right) */
+header .buttons {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 12px;
+}
+
+header button {
+  width: 46px;
+  height: 46px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #1e293b;
+  border: 2px solid #38bdf8;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  color: #38bdf8;
+  transition: all 0.3s ease;
+}
+
+header button i {
+  font-size: 20px; /* Icon size */
+}
+
+header button:hover {
+  background: #38bdf8;
+  color: #0f172a;
+  transform: scale(1.15);
+  box-shadow: 0 0 15px #38bdf8aa;
+}
+
+/* Main Content */
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* Game Frame */
+iframe {
+  width: 90%;
+  height: 90%;
+  border: none;
+  display: block;
+  border-radius: 12px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+  background: #000;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  iframe {
+    width: 95%;
+    height: 85%;
+  }
+}
+
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  header .buttons {
+    position: static; /* buttons neeche aa jayenge */
+    transform: none;
+    margin-top: 5px;
+    justify-content: center;
+    width: 100%;
+  }
+  header button {
+    width: 40px;
+    height: 40px;
+  }
+  header button i {
+    font-size: 18px;
+  }
+  iframe {
+    width: 100%;
+    height: 80%;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 16px;
+    letter-spacing: 0.5px;
+  }
+  header button {
+    width: 36px;
+    height: 36px;
+  }
+  header button i {
+    font-size: 16px;
+  }
+  iframe {
+    height: 75%;
+  }
+}

@@ -1,0 +1,126 @@
+/* Global */
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #1d1f21, #323a45);
+  color: #fff;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header */
+header {
+  padding: 20px;
+  background: #111;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+/* Grid layout */
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+  padding: 30px;
+  flex: 1;
+}
+
+/* Game Card */
+.game-card {
+  background: #222;
+  border-radius: 15px;
+  overflow: hidden;
+  text-decoration: none;
+  color: white;
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+}
+.game-card img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+.game-card span {
+  font-size: 1rem;
+  font-weight: 500;
+}
+.game-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+  background: #333;
+}
+
+/* Footer */
+footer {
+  background: #111;
+  padding: 15px;
+  font-size: 0.9rem;
+  margin-top: auto;
+}
+
+/* 🔹 Responsive Design */
+@media (max-width: 1024px) {
+  header h1 {
+    font-size: 1.6rem;
+  }
+  .game-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
+  }
+  .game-card img {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 1.4rem;
+  }
+  .game-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .game-card img {
+    width: 80px;
+    height: 80px;
+  }
+  .game-card span {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1.2rem;
+  }
+  .game-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 15px;
+  }
+  .game-card {
+    padding: 10px;
+  }
+  .game-card img {
+    width: 70px;
+    height: 70px;
+  }
+  .game-card span {
+    font-size: 0.85rem;
+  }
+  footer {
+    font-size: 0.8rem;
+  }
+}
