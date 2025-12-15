@@ -834,7 +834,37 @@ function closeGamesMenu() {
 }
 
 function launchGame(url) {
-    window.open(url, '_blank');
+    // Create an about:blank window
+    const gameWindow = window.open('about:blank', '_blank');
+    
+    // Write the game iframe into the about:blank page
+    gameWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Loading...</title>
+            <style>
+                body, html {
+                    margin: 0;
+                    padding: 0;
+                    width: 100%;
+                    height: 100%;
+                    overflow: hidden;
+                }
+                iframe {
+                    border: none;
+                    width: 100%;
+                    height: 100%;
+                }
+            </style>
+        </head>
+        <body>
+            <iframe src="${url}" allowfullscreen></iframe>
+        </body>
+        </html>
+    `);
+    gameWindow.document.close();
+    
     closeGamesMenu();
 }
 document.addEventListener('click', function(e) {
