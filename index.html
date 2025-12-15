@@ -6,6 +6,83 @@
     <title>Class Manager</title>
     <link rel="icon" type="image/x-icon" href="Files/favicon.png">
     <style>
+        .games-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.games-menu-panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.games-menu-title {
+    color: #333;
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.game-item {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.game-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.game-item-name {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.game-item-description {
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+.games-close-btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    background: #666;
+    color: white;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.games-close-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -419,7 +496,7 @@
             <button id="games-button" class="button" onclick="openGames()">🎮 Play Games</button>
         </div>
         <div> 
-            <button onclick="updateSchedule()" class="button" id = "update-schedule-button">Import Schedule</button>
+            <button onclick="updateSchedule()" class="button" id = "update-schedule-button">📝 Import Schedule</button>
         </div>
         <div>
     <button onclick="openThemeEditor()" class="button" id="theme-editor-button">🎨 Edit Theme</button>
@@ -463,6 +540,53 @@
             <button class="theme-btn theme-btn-reset" onclick="resetTheme()">Reset</button>
             <button class="theme-btn theme-btn-close" onclick="closeThemeEditor()">Close</button>
         </div>
+    </div>
+</div>
+<div id="games-menu-overlay" class="games-menu-overlay">
+    <div class="games-menu-panel">
+        <div class="games-menu-title">🎮 Choose a Game</div>
+        
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/slopeoffline.html')">
+            <div class="game-item-name">Slope Game</div>
+            <div class="game-item-description">"The Green Ball Game"</div>
+        </div>
+        
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/cubefield/index.html')">
+            <div class="game-item-name">Cubefield</div>
+            <div class="game-item-description">Runner type game</div>
+        </div>
+        
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/townscaper/index.html')">
+            <div class="game-item-name">Tower Scaper</div>
+            <div class="game-item-description">Building sim type game</div>
+        </div>
+        
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/tetris/index.html')">
+            <div class="game-item-name">Tetris</div>
+            <div class="game-item-description">Its knock off Tetris, but not bad</div>
+        </div>
+        
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/flappybird/index.html')">
+            <div class="game-item-name">Flappy Bird</div>
+            <div class="game-item-description">Not a remake, its real</div>
+        </div>
+        
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/underrun/index.html')">
+            <div class="game-item-name">Under Run</div>
+            <div class="game-item-description">Unique game</div>
+        </div>
+        
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/breakout/index.html')">
+            <div class="game-item-name">Breakout</div>
+            <div class="game-item-description">Knock off Atari Breakout</div>
+        </div>
+        
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/the-worlds-hardest-game.html')">
+            <div class="game-item-name">The Worlds Hardest Game</div>
+            <div class="game-item-description">Its really hard</div>
+        </div>
+        
+        <button class="games-close-btn" onclick="closeGamesMenu()">Close</button>
     </div>
 </div>
 <SCRIPT LANGUAGE="JavaScript">
@@ -702,55 +826,23 @@
         }
 
         function openGames() {
-            // List of HTML games with relative paths - these will work anywhere the Website folder is placed
-            const games = [
-                {
-                    name: "Slope Game",
-                    url: "./Files/Extra/Games/slopeoffline.html",
-                    description: '"The Green Ball Game"'
-                }, {
-                    name: "Cubefield",
-                    url: "./Files/Extra/Games/cubefield/index.html",
-                    description: "Runner type game"
-                }, {
-                    name: "Tower Scaper",
-                    url: "./Files/Extra/Games/townscaper/index.html",
-                    description: "Building sim type game"
-                }, {
-                    name: "Tetris",
-                    url: "./Files/Extra/Games/tetris/index.html",
-                    description: "Its knock off Tetris, but not bad"
-                }, {
-                    name: "Flappy Bird",
-                    url: "./Files/Extra/Games/flappybird/index.html",
-                    description: "Not a remake, its real"
-                }, {
-                    name: "Under Run",
-                    url: "./Files/Extra/Games/underrun/index.html",
-                    description: "Unique game"
-                }, {
-                    name: "Breakout",
-                    url: "./Files/Extra/Games/breakout/index.html",
-                    description: "Knock off Atari Breakout"
-                }, {
-                    name: "The Worlds Hardest Game",
-                    url: "./Files/Extra/Games/the-worlds-hardest-game.html",
-                    description: "Its really hard"
-                }
-            ];
+    document.getElementById('games-menu-overlay').style.display = 'flex';
+}
 
-            let gamesList = "Choose a game:\n\n";
-            games.forEach((game, index) => {
-                gamesList += `${index + 1}. ${game.name} - ${game.description}\n`;
-            });
-            
-            const choice = prompt(gamesList + "\nEnter the number of the game you want to play:");
-            const gameIndex = parseInt(choice) - 1;
-            
-            if (gameIndex >= 0 && gameIndex < games.length) {
-                window.open(games[gameIndex].url, '_blank');
-            }
-        }
+function closeGamesMenu() {
+    document.getElementById('games-menu-overlay').style.display = 'none';
+}
+
+function launchGame(url) {
+    window.open(url, '_blank');
+    closeGamesMenu();
+}
+document.addEventListener('click', function(e) {
+    const gamesOverlay = document.getElementById('games-menu-overlay');
+    if (e.target === gamesOverlay) {
+        closeGamesMenu();
+    }
+});
         function updateSchedule() {
             if (!confirm("Import Schedule\n\nEnter class names for each period. Programming and Lunch stay the same.\n\nContinue?")) return;
             
