@@ -40,7 +40,6 @@
 }
 
 .game-item {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 15px;
     padding: 20px;
     margin-bottom: 15px;
@@ -451,6 +450,28 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
+.games-search-bar {
+    width: calc(100% - 24px);
+    padding: 12px;
+    margin: 0 auto 20px auto;
+    display: block;
+    border: none;
+    border-radius: 10px;
+    font-size: 1em;
+    background: rgba(102, 126, 234, 0.2);
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.games-search-bar::placeholder {
+    color: #666;
+}
+
+.games-search-bar:focus {
+    outline: none;
+    background: rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
 
         @media (max-width: 768px) {
             .container {
@@ -466,6 +487,7 @@
                 font-size: 2em;
             }
         }
+
     </style>
 </head>
 <body>
@@ -545,66 +567,71 @@
 <div id="games-menu-overlay" class="games-menu-overlay">
     <div class="games-menu-panel">
         <div class="games-menu-title">🎮 Choose a Game</div>
-        <div class="game-item" onclick="launchGame('./Files/Extra/Games/shellshockers.html')">
+        <input type="text" 
+       class="games-search-bar" 
+       id="games-search" 
+       placeholder="Search for a game..." 
+       onkeyup="filterGames()">
+        <div class="game-item"id="custom-theme" onclick="launchGame('./Files/Extra/Games/shellshockers.html')">
             <div class="game-item-name">Shell Shockers</div>
             <div class="game-item-description">FPS game</div>
         </div>
-        <div class="game-item" onclick="launchGame('./Files/Extra/Games/the-worlds-hardest-game.html')">
+        <div class="game-item"id="custom-theme" onclick="launchGame('./Files/Extra/Games/the-worlds-hardest-game.html')">
             <div class="game-item-name">The Worlds Hardest Game</div>
             <div class="game-item-description">Its really hard</div>
         </div>
-        <div class="game-item" onclick="launchGame('./Files/Extra/Games/krunker.html')">
+        <div class="game-item"id="custom-theme" onclick="launchGame('./Files/Extra/Games/krunker.html')">
             <div class="game-item-name">Krunker.io</div>
             <div class="game-item-description">FPS game</div>
         </div>
-        <div class="game-item" onclick="launchGame('./Files/Extra/Games/diep.html')">
+        <div class="game-item"id="custom-theme" onclick="launchGame('./Files/Extra/Games/diep.html')">
             <div class="game-item-name">Diep.io</div>
             <div class="game-item-description">Top view shooter game</div>
         </div>
-        <div class="game-item" onclick="launchGame('./Files/Extra/Games/slither.html')">
+        <div class="game-item"id="custom-theme" onclick="launchGame('./Files/Extra/Games/slither.html')">
             <div class="game-item-name">Slither.io</div>
             <div class="game-item-description">The game with the snakes</div>
         </div>
-        <div class="game-item" onclick="launchGame('./Files/Extra/Games/starve.html')">
+        <div class="game-item"id="custom-theme" onclick="launchGame('./Files/Extra/Games/starve.html')">
             <div class="game-item-name">Starve</div>
             <div class="game-item-description">I didn't play it so idk</div>
         </div>
-        <div class="game-item" onclick="launchGame('./Files/Extra/Games/slopeoffline.html')">
+        <div class="game-item"id="custom-theme" onclick="launchGame('./Files/Extra/Games/slopeoffline.html')">
             <div class="game-item-name">Slope Game</div>
             <div class="game-item-description">"The Green Ball Game"</div>
         </div>
         
-        <div class="game-item" onclick="launchGame('./Files/Extra/Games/cubefield/index.html')">
+        <div class="game-item"id="custom-theme" onclick="launchGame('./Files/Extra/Games/cubefield/index.html')">
             <div class="game-item-name">Cubefield</div>
             <div class="game-item-description">Runner type game</div>
         </div>
         
-        <div class="game-item" onclick="launchGame('./Files/Extra/Games/townscaper/index.html')">
+        <div class="game-item"id="custom-theme" onclick="launchGame('./Files/Extra/Games/townscaper/index.html')">
             <div class="game-item-name">Tower Scaper</div>
             <div class="game-item-description">Building sim type game</div>
         </div>
         
-        <div class="game-item" onclick="launchGame('./Files/Extra/Games/tetris/index.html')">
+        <div class="game-item"id="custom-theme" onclick="launchGame('./Files/Extra/Games/tetris/index.html')">
             <div class="game-item-name">Tetris</div>
             <div class="game-item-description">Its knock off Tetris, but not bad</div>
         </div>
         
-        <div class="game-item" onclick="launchGame('./Files/Extra/Games/retrobowl.html')">
+        <div class="game-item"id="custom-theme" onclick="launchGame('./Files/Extra/Games/retrobowl.html')">
             <div class="game-item-name">Retro Bowl</div>
             <div class="game-item-description">Football game</div>
         </div>
         
-        <div class="game-item" onclick="launchGame('./Files/Extra/Games/flappybird/index.html')">
+        <div class="game-item"id="custom-theme" onclick="launchGame('./Files/Extra/Games/flappybird/index.html')">
             <div class="game-item-name">Flappy Bird</div>
             <div class="game-item-description">Not a remake, its real</div>
         </div>
         
-        <div class="game-item" onclick="launchGame('./Files/Extra/Games/underrun/index.html')">
+        <div class="game-item"id="custom-theme" onclick="launchGame('./Files/Extra/Games/underrun/index.html')">
             <div class="game-item-name">Under Run</div>
             <div class="game-item-description">Unique game</div>
         </div>
         
-        <div class="game-item" onclick="launchGame('./Files/Extra/Games/breakout/index.html')">
+        <div class="game-item"id="custom-theme" onclick="launchGame('./Files/Extra/Games/breakout/index.html')">
             <div class="game-item-name">Breakout</div>
             <div class="game-item-description">Knock off Atari Breakout</div>
         </div>
@@ -855,6 +882,8 @@
 
 function closeGamesMenu() {
     document.getElementById('games-menu-overlay').style.display = 'none';
+    document.getElementById('games-search').value = '';
+    filterGames();
 }
 
 function launchGame(url) {
@@ -1280,6 +1309,9 @@ function applyTheme(theme) {
             border-left-color: ${theme.nextClass} !important;
             background: ${theme.nextClass}33 !important;
         }
+        .game-item {
+            background: linear-gradient(135deg, ${theme.gradientStart} 0%, ${theme.gradientEnd} 100%) !important;
+        }
     `;
     document.head.appendChild(style);
 }
@@ -1315,6 +1347,21 @@ document.addEventListener('click', function(e) {
         closeThemeEditor();
     }
 });
+function filterGames() {
+    const searchInput = document.getElementById('games-search').value.toLowerCase();
+    const gameItems = document.querySelectorAll('.game-item');
+    
+    gameItems.forEach(item => {
+        const gameName = item.querySelector('.game-item-name').textContent.toLowerCase();
+        const gameDesc = item.querySelector('.game-item-description').textContent.toLowerCase();
+        
+        if (gameName.includes(searchInput) || gameDesc.includes(searchInput)) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
 </script>
 <div class="countdown-school-section">
     <h1 class="countdown-school-title"> Prison Sentence Monitor (School year Monitor)</h1>
