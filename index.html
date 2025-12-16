@@ -1,21 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Class Manager</title>
     <link rel="icon" type="image/x-icon" href="Files/favicon.png">
     <style>
-        .moveUp, .moveDown {
-            background: #bbb;
-            color: white;
-            font-size: 16px;
-            padding: 4px 8px;
-        }
-        .moveUp:hover, .moveDown:hover {
-            background: #999;
-        }
+        .games-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
 
+.games-menu-panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.games-menu-title {
+    color: #333;
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.game-item {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.game-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.game-item-name {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.game-item-description {
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+.games-close-btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    background: #666;
+    color: white;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.games-close-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -43,7 +110,7 @@
         }
 
         .countdown-school-title{
-            margin-left: 32%;
+            margin-left: 16%;
             font-weight: bold;
             color: #ffffff;
             font-size: 2.5em;
@@ -227,22 +294,10 @@
             background: #2c3e50;
             color: white;
         }
-        .delete-btn {
-    background: #d9534f;
-    color: white;
-    border: none;
-    padding: 2px 6px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-.delete-btn:hover {
-    background: #c9302c;
-}
-
 
         .notes-textarea {
             width: 100%;
-            min-height: 300px;
+            min-height: 118px;
             font-size: 1em;
             border: none;
             border-radius: 10px;
@@ -299,6 +354,7 @@
             border-radius: 20px;
             padding: 30px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
@@ -307,55 +363,225 @@
             display:none;
             transform: translateY(-1px);
         }
+        .theme-editor-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
 
-        .modal-tab {
-            display: inline-block;
-            padding: 8px 12px;
-            margin-right: 6px;
-            cursor: pointer;
-            border-radius: 8px;
-            background: rgba(255,255,255,0.06);
-        }
-        .modal-tab.active {
-            background: rgba(255,255,255,0.16);
-            font-weight: bold;
-        }
+.theme-editor-panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
 
-        .day-order-container {
-            margin: 12px 0;
-            background: rgba(255,255,255,0.04);
-            padding: 10px;
-            border-radius: 8px;
-        }
+.theme-editor-title {
+    color: #333;
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
 
-        .day-order-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
+.theme-control {
+    margin-bottom: 20px;
+}
 
-        .day-order-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px;
-            margin: 6px 0;
-            border-radius: 6px;
-            background: rgba(255,255,255,0.03);
-        }
+.theme-control label {
+    display: block;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
 
-        .day-order-item .label {
-            flex: 1;
-        }
+.theme-control input[type="color"] {
+    width: 100%;
+    height: 50px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
 
-        .order-controls button {
-            padding: 6px 8px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            background: rgba(255,255,255,0.08);
-        }
+.theme-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.theme-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.theme-btn-save {
+    background: #4caf50;
+    color: white;
+}
+
+.theme-btn-reset {
+    background: #ff5722;
+    color: white;
+}
+
+.theme-btn-close {
+    background: #666;
+    color: white;
+}
+
+.theme-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+/* Music Player Styles */
+.music-player-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.music-player-panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 800px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.music-player-title {
+    color: #333;
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.music-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.music-tab {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    background: #ddd;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.music-tab.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.music-tab:hover {
+    transform: translateY(-2px);
+}
+
+.music-content {
+    display: none;
+}
+
+.music-content.active {
+    display: block;
+}
+
+.playlist-item {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.playlist-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.playlist-name {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.playlist-description {
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+.music-player-iframe {
+    width: 100%;
+    height: 400px;
+    border: none;
+    border-radius: 15px;
+    margin-top: 20px;
+}
+
+.custom-url-input {
+    width: 100%;
+    padding: 12px;
+    font-size: 1em;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.music-close-btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    background: #666;
+    color: white;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+}
+
+.music-close-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
 
         @media (max-width: 768px) {
             .container {
@@ -401,13 +627,166 @@
             <button id="games-button" class="button" onclick="openGames()">🎮 Play Games</button>
         </div>
         <div> 
-            <button onclick="updateSchedule()" class="button" id = "update-schedule-button">Import Schedule</button>
+            <button onclick="updateSchedule()" class="button" id = "update-schedule-button">📝 Import Schedule</button>
         </div>
+        <div>
+    <button onclick="openThemeEditor()" class="button" id="theme-editor-button">🎨 Edit Theme</button>
+</div>
+<div>
+    <button onclick="openMusicPlayer()" class="button" id="music-player-button">🎵 Music Player</button>
+</div>
         
         </div>
     </div>
 
-
+<!-- Theme Editor Overlay -->
+<div id="theme-editor-overlay" class="theme-editor-overlay">
+    <div class="theme-editor-panel">
+        <div class="theme-editor-title">🎨 Theme Editor</div>
+        
+        <div class="theme-control">
+            <label>Background Gradient Start:</label>
+            <input type="color" id="color-gradient-start" value="#667eea">
+        </div>
+        
+        <div class="theme-control">
+            <label>Background Gradient End:</label>
+            <input type="color" id="color-gradient-end" value="#764ba2">
+        </div>
+        
+        <div class="theme-control">
+            <label>Timer Color:</label>
+            <input type="color" id="color-timer" value="#ffeb3b">
+        </div>
+        
+        <div class="theme-control">
+            <label>Current Class Highlight:</label>
+            <input type="color" id="color-current-class" value="#4caf50">
+        </div>
+        
+        <div class="theme-control">
+            <label>Next Class Highlight:</label>
+            <input type="color" id="color-next-class" value="#ff9800">
+        </div>
+        
+        <div class="theme-buttons">
+            <button class="theme-btn theme-btn-save" onclick="saveTheme()">Save Theme</button>
+            <button class="theme-btn theme-btn-reset" onclick="resetTheme()">Reset</button>
+            <button class="theme-btn theme-btn-close" onclick="closeThemeEditor()">Close</button>
+        </div>
+    </div>
+</div>
+<div id="games-menu-overlay" class="games-menu-overlay">
+    <div class="games-menu-panel">
+        <div class="games-menu-title">🎮 Choose a Game</div>
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/shellshockers.html')">
+            <div class="game-item-name">Shell Shockers</div>
+            <div class="game-item-description">FPS game</div>
+        </div>
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/the-worlds-hardest-game.html')">
+            <div class="game-item-name">The Worlds Hardest Game</div>
+            <div class="game-item-description">Its really hard</div>
+        </div>
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/krunker.html')">
+            <div class="game-item-name">Krunker.io</div>
+            <div class="game-item-description">FPS game</div>
+        </div>
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/diep.html')">
+            <div class="game-item-name">Diep.io</div>
+            <div class="game-item-description">Top view shooter game</div>
+        </div>
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/slither.html')">
+            <div class="game-item-name">Slither.io</div>
+            <div class="game-item-description">The game with the snakes</div>
+        </div>
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/starve.html')">
+            <div class="game-item-name">Starve</div>
+            <div class="game-item-description">I didn't play it so idk</div>
+        </div>
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/slopeoffline.html')">
+            <div class="game-item-name">Slope Game</div>
+            <div class="game-item-description">"The Green Ball Game"</div>
+        </div>
+        
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/cubefield/index.html')">
+            <div class="game-item-name">Cubefield</div>
+            <div class="game-item-description">Runner type game</div>
+        </div>
+        
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/townscaper/index.html')">
+            <div class="game-item-name">Tower Scaper</div>
+            <div class="game-item-description">Building sim type game</div>
+        </div>
+        
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/tetris/index.html')">
+            <div class="game-item-name">Tetris</div>
+            <div class="game-item-description">Its knock off Tetris, but not bad</div>
+        </div>
+        
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/retrobowl.html')">
+            <div class="game-item-name">Retro Bowl</div>
+            <div class="game-item-description">Football game</div>
+        </div>
+        
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/flappybird/index.html')">
+            <div class="game-item-name">Flappy Bird</div>
+            <div class="game-item-description">Not a remake, its real</div>
+        </div>
+        
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/underrun/index.html')">
+            <div class="game-item-name">Under Run</div>
+            <div class="game-item-description">Unique game</div>
+        </div>
+        
+        <div class="game-item" onclick="launchGame('./Files/Extra/Games/breakout/index.html')">
+            <div class="game-item-name">Breakout</div>
+            <div class="game-item-description">Knock off Atari Breakout</div>
+        </div>
+    
+        
+        <button class="games-close-btn" onclick="closeGamesMenu()">Close</button>
+    </div>
+</div>
+<!-- Music Player Overlay -->
+<div id="music-player-overlay" class="music-player-overlay">
+    <div class="music-player-panel">
+        <div class="music-player-title">🎵 Music Player</div>
+        
+        <div class="search-section">
+            <input type="text" id="song-search-input" class="custom-url-input" placeholder="Search for any song or artist..." onkeypress="if(event.key==='Enter') searchAndPlay()">
+            <button class="playlist-item" onclick="searchAndPlay()" style="text-align: center; margin-bottom: 15px;">
+                <div class="playlist-name">🔍 Search & Play</div>
+                <div class="playlist-description">Opens YouTube in new window</div>
+            </button>
+        </div>
+        
+        <div style="color: #333; margin: 20px 0; text-align: center; font-size: 0.95em;">
+            Or choose a preset:
+        </div>
+        
+        <div class="playlist-item" onclick="openYouTube('lofi girl')">
+            <div class="playlist-name">Lofi Girl - Study Beats</div>
+            <div class="playlist-description">24/7 chill lo-fi hip hop</div>
+        </div>
+        
+        <div class="playlist-item" onclick="openYouTube('study music')">
+            <div class="playlist-name">Study Music Mix</div>
+            <div class="playlist-description">Focus and concentration music</div>
+        </div>
+        
+        <div class="playlist-item" onclick="openYouTube('piano music')">
+            <div class="playlist-name">Piano Study Music</div>
+            <div class="playlist-description">Peaceful piano for homework</div>
+        </div>
+        
+        <div class="playlist-item" onclick="openYouTube('chill music')">
+            <div class="playlist-name">Chill Vibes</div>
+            <div class="playlist-description">Relaxing background music</div>
+        </div>
+        
+        <button class="music-close-btn" onclick="closeMusicPlayer()">Close</button>
+    </div>
+</div>
 <SCRIPT LANGUAGE="JavaScript">
     function getCookie(c_name) {
         var c_value = document.cookie;
@@ -447,7 +826,9 @@
         }
         function toggleElements() {
             toggleElementById('update-schedule-button')
+            toggleElementById('theme-editor-button')
             toggleElementById('buttons-section')
+            toggleElementById('music-player-button')
         //toggleElemntById('Id')
         }
         let keysPressed = {};
@@ -466,19 +847,6 @@
         });
         toggleElements()//this makes it hidden when the project starts
         toggleElementById('games-button')
-
-        // Make classPeriods mutable (was const in original - changed to let so we can update it)
-        let classPeriods = [
-            { period: "A", name: "Human Geography - 2 (A)" },
-            { period: "B", name: "Study Hall - 5 (B)" },
-            { period: "C", name: "Honors Geometry - 2 (C)" },
-            { period: "Programming", name: "Programming - 1 (Programming)" },
-            { period: "D", name: "Intro to Python Programming - 1 (D)" },
-            { period: "E", name: "Honors Biology - 1 (E)" },
-            { period: "F", name: "English 9 - 3 (F)" },
-            { period: "G", name: "Spanish 2 - 1 (G)" }
-        ];
-
         const Periods = {
                     "A": "Human Geography - 2 (A)" ,
                     "B": "Study Hall - 5 (B)" ,
@@ -550,17 +918,16 @@
             ]
         };
 
-        // Default (base) time slots used when creating schedules
-        const baseTimes = [
-            { start: "08:00", end: "08:45", time: "8:00 AM - 8:45 AM" },
-            { start: "08:50", end: "09:35", time: "8:50 AM - 9:35 AM" },
-            { start: "09:40", end: "10:25", time: "9:40 AM - 10:25 AM" },
-            { start: "10:30", end: "11:10", time: "10:30 AM - 11:10 AM" },
-            { start: "11:15", end: "12:00", time: "11:15 AM - 12:00 PM" },
-            { start: "12:05", end: "12:30", time: "12:05 PM - 12:30 PM" },
-            { start: "12:35", end: "13:25", time: "12:35 PM - 1:25 PM" },
-            { start: "13:30", end: "14:20", time: "1:30 PM - 2:20 PM" },
-            { start: "14:25", end: "15:15", time: "2:25 PM - 3:15 PM" }
+        // Define class periods in order
+        const classPeriods = [
+            { period: "A", name: Periods['A'] },
+            { period: "B", name: Periods['B'] },
+            { period: "C", name: Periods['C'] },
+            { period: "Programming", name: "Programming - 1 (Programming)" },
+            { period: "D", name: Periods['D'] },
+            { period: "E", name: Periods['E'] },
+            { period: "F", name: Periods['F'] },
+            { period: "G", name: Periods['G'] }
         ];
 
         // Notes functionality
@@ -658,553 +1025,102 @@
         }
 
         function openGames() {
-            // List of HTML games with relative paths - these will work anywhere the Website folder is placed
-            const games = [
-                {
-                    name: "Slope Game",
-                    url: "./Files/Extra/Games/slopeoffline.html",
-                    description: '"The Green Ball Game"'
-                }, {
-                    name: "Cubefield",
-                    url: "./Files/Extra/Games/cubefield/index.html",
-                    description: "Runner type game"
-                }, {
-                    name: "Tower Scaper",
-                    url: "./Files/Extra/Games/townscaper/index.html",
-                    description: "Building sim type game"
-                }, {
-                    name: "Tetris",
-                    url: "./Files/Extra/Games/tetris/index.html",
-                    description: "Its knock off Tetris, but not bad"
-                }, {
-                    name: "Flappy Bird",
-                    url: "./Files/Extra/Games/flappybird/index.html",
-                    description: "Not a remake, its real"
-                }, {
-                    name: "Under Run",
-                    url: "./Files/Extra/Games/underrun/index.html",
-                    description: "Unique game"
-                }, {
-                    name: "Breakout",
-                    url: "./Files/Extra/Games/breakout/index.html",
-                    description: "Knock off Atari Breakout"
-                }, {
-                    name: "The Worlds Hardest Game",
-                    url: "./Files/Extra/Games/the-worlds-hardest-game.html",
-                    description: "Its really hard"
-                }
-            ];
-
-            let gamesList = "Choose a game:\n\n";
-            games.forEach((game, index) => {
-                gamesList += `${index + 1}. ${game.name} - ${game.description}\n`;
-            });
-            
-            const choice = prompt(gamesList + "\nEnter the number of the game you want to play:");
-            const gameIndex = parseInt(choice) - 1;
-            
-            if (gameIndex >= 0 && gameIndex < games.length) {
-                window.open(games[gameIndex].url, '_blank');
-            }
-        }
-
-        /* =========================
-           SCHEDULE / EDITOR MODAL
-           ========================= */
-
-        function updateSchedule() {
-            // Create a simple interface for schedule customization
-            // This modal now contains:
-            // - class name inputs (period A, B, C...)
-            // - checkboxes for including Programming and Lunch
-            // - a tabbed interface: "Names" and "Day Orders"
-            // - for each weekday, an order list with up/down buttons to change order
-            const modalHTML = `
-                <div id="schedule-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 10000;">
-                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 20px; max-width: 900px; max-height: 90%; overflow-y: auto; color: white;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <h2 style="margin-top: 0;">Customize Your Schedule & Bell Order</h2>
-                            <div>
-                                <span class="modal-tab active" id="tab-names" onclick="switchModalTab('names')">Names</span>
-                                <span class="modal-tab" id="tab-orders" onclick="switchModalTab('orders')">Day Orders</span>
-                            </div>
-                        </div>
-                        
-                        <div id="tab-content-names" style="margin-top: 10px;">
-                            <label style="display: block; margin: 10px 0;">
-                                <input type="checkbox" id="include-programming" checked> Include Programming Period
-                            </label>
-                            
-                            <label style="display: block; margin: 10px 0 20px 0;">
-                                <input type="checkbox" id="include-lunch" checked> Include Lunch Period
-                            </label>
-                            
-                            <label style="display: block; margin: 20px 0 10px 0;">
-                                Number of Class Periods:
-                                <input type="number" id="num-periods" min="1" max="10" value="7" style="margin-left: 10px; padding: 5px; border-radius: 5px; border: none; width: 60px;">
-                            </label>
-                            
-                            <div id="period-inputs" style="margin: 20px 0;"></div>
-                        </div>
-
-                        <div id="tab-content-orders" style="display:none; margin-top: 10px;">
-                            <p style="margin:6px 0 12px 0;">For each weekday you can reorder which periods run and where Programming / Lunch appear.</p>
-                            <div id="day-orders-wrapper"></div>
-                        </div>
-                        
-                        <div style="margin-top: 20px; display: flex; gap: 10px;">
-                            <button onclick="saveCustomSchedule()" style="flex: 1; padding: 12px; background: #4caf50; border: none; border-radius: 10px; color: white; font-size: 16px; cursor: pointer; font-weight: bold;">Save Schedule</button>
-                            <button onclick="closeScheduleModal()" style="flex: 1; padding: 12px; background: #f44336; border: none; border-radius: 10px; color: white; font-size: 16px; cursor: pointer; font-weight: bold;">Cancel</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            document.body.insertAdjacentHTML('beforeend', modalHTML);
-            
-            // Generate input fields for periods
-            document.getElementById('num-periods').addEventListener('input', generatePeriodInputs);
-            generatePeriodInputs();
-
-            // Build day order UI
-            document.getElementById('include-programming').addEventListener('change', regenerateDayOrderUI);
-            document.getElementById('include-lunch').addEventListener('change', regenerateDayOrderUI);
-            generateDayOrderUI();
-        }
-        
-        function switchModalTab(tab) {
-            document.getElementById('tab-names').classList.remove('active');
-            document.getElementById('tab-orders').classList.remove('active');
-            document.getElementById('tab-content-names').style.display = 'none';
-            document.getElementById('tab-content-orders').style.display = 'none';
-            if (tab === 'names') {
-                document.getElementById('tab-names').classList.add('active');
-                document.getElementById('tab-content-names').style.display = 'block';
-            } else {
-                document.getElementById('tab-orders').classList.add('active');
-                document.getElementById('tab-content-orders').style.display = 'block';
-            }
-        }
-        
-        function generatePeriodInputs() {
-            const numPeriods = parseInt(document.getElementById('num-periods').value);
-            const container = document.getElementById('period-inputs');
-            container.innerHTML = '<h3>Class Names (use the exact period letter you want to refer to):</h3>';
-            
-            for (let i = 1; i <= numPeriods; i++) {
-                const letter = String.fromCharCode(64 + i); // A, B, C, etc.
-                // Preserve existing names if present
-                const existingName = (function() {
-                    // try local saved config first
-                    const savedConfig = JSON.parse(localStorage.getItem('scheduleConfig') || '{}');
-                    if (savedConfig && savedConfig.classNames && savedConfig.classNames[letter]) return savedConfig.classNames[letter];
-                    // otherwise try Periods mapping
-                    if (Periods[letter]) return Periods[letter].replace(/\s*\([A-Z]\)$/, '').trim() + ` (${letter})`;
-                    return '';
-                })();
-                
-                container.innerHTML += `
-                    <div style="margin: 10px 0;">
-                        <label style="display: block; margin-bottom: 5px;">Period ${letter}:</label>
-                        <input type="text" id="period-${letter}" placeholder="e.g., Math, English, Science" value="${existingName}" style="width: 100%; padding: 8px; border-radius: 5px; border: none;">
-                    </div>
-                `;
-            }
-
-            // regenerate day order UI so lists reflect newly added periods
-            generateDayOrderUI();
-        }
-
-        // Build the Day Order UI (per weekday), allowing move up / move down
-        function generateDayOrderUI() {
-            const wrapper = document.getElementById('day-orders-wrapper');
-            if (!wrapper) return;
-            wrapper.innerHTML = '';
-            
-            // Collect the letters currently defined
-            const numPeriods = parseInt(document.getElementById('num-periods').value);
-            const letters = [];
-            for (let i = 1; i <= numPeriods; i++) letters.push(String.fromCharCode(64 + i));
-            
-            // Determine whether programming/lunch are included (they can be moved per day)
-            const includeProgramming = document.getElementById('include-programming').checked;
-            const includeLunch = document.getElementById('include-lunch').checked;
-
-            // Create default order: letters in order, then Programming and Lunch at end if included
-            const defaultOrder = [...letters];
-            if (includeProgramming) defaultOrder.push('Programming');
-            if (includeLunch) defaultOrder.push('Lunch');
-
-            // Load any previously saved day-specific orders if available
-            const savedCustomSchedules = JSON.parse(localStorage.getItem('customSchedules') || '{}');
-            const savedConfig = JSON.parse(localStorage.getItem('scheduleConfig') || '{}');
-            const savedDayOrders = savedConfig.dayOrders || {};
-
-            const days = [
-                {num: 1, name: 'Monday'},
-                {num: 2, name: 'Tuesday'},
-                {num: 3, name: 'Wednesday'},
-                {num: 4, name: 'Thursday'},
-                {num: 5, name: 'Friday'}
-            ];
-
-            days.forEach(day => {
-                const container = document.createElement('div');
-                container.className = 'day-order-container';
-                container.innerHTML = `<strong>${day.name}</strong><div style="font-size:0.9em; opacity:0.85; margin-top:6px;">Drag not required — use the ↑ ↓ buttons to reorder</div><div id="day-${day.num}-controls"></div>`;
-                
-                const list = document.createElement('ul');
-                list.className = 'day-order-list';
-                list.id = `day-order-list-${day.num}`;
-
-                // Use saved order or default
-                let order = savedDayOrders[day.num] ? [...savedDayOrders[day.num]] : [...defaultOrder];
-
-                // Ensure order contains all letters and optional items
-                // Remove any items not in (letters + optional items), then add missing ones at the end
-                const allowed = new Set([...letters, 'Programming', 'Lunch']);
-                order = order.filter(item => allowed.has(item));
-                letters.forEach(l => { if (!order.includes(l)) order.push(l); });
-                if (includeProgramming && !order.includes('Programming')) order.push('Programming');
-                if (includeLunch && !order.includes('Lunch')) order.push('Lunch');
-                // If programming/lunch are not included remove them
-                if (!includeProgramming) order = order.filter(i => i !== 'Programming');
-                if (!includeLunch) order = order.filter(i => i !== 'Lunch');
-
-                order.forEach((item, idx) => {
-                    const li = document.createElement('li');
-                    li.className = 'day-order-item';
-                    li.dataset.day = day.num;
-                    li.dataset.index = idx;
-                    li.dataset.item = item;
-
-                    const label = document.createElement('div');
-                    label.className = 'label';
-                    // Show readable name for the period if there is a custom name saved, else the item label
-                    const letterMatch = /^[A-Z]$/.test(item);
-                    let displayName = item;
-                    if (letterMatch) {
-                        // If a saved name exists in scheduleConfig, use that
-                        const savedClassNames = (savedConfig.classNames) ? savedConfig.classNames : {};
-                        if (savedClassNames[item]) displayName = `${savedClassNames[item]} (${item})`;
-                        else if (Periods[item]) displayName = Periods[item]; // fall back to Periods mapping
-                        else displayName = `${item} Period`;
-                    } else if (item === 'Programming') displayName = 'Programming (Programming)';
-                    else if (item === 'Lunch') displayName = 'Lunch (Lunch)';
-
-                    label.textContent = displayName;
-
-                    const controls = document.createElement('div');
-                    controls.className = 'order-controls';
-                    controls.innerHTML = `
-                        <button onclick="moveDayItemUp(${day.num}, ${idx})">↑</button>
-                        <button onclick="moveDayItemDown(${day.num}, ${idx})">↓</button>
-                        <button onclick="deleteDayItem(${day.num}, ${idx})" class="delete-btn">🗑</button>
-                    `;
-
-                    li.appendChild(label);
-                    li.appendChild(controls);
-                    list.appendChild(li);
-                });
-
-                container.appendChild(list);
-                wrapper.appendChild(container);
-            });
-        }
-        function deleteDayItem(dayNum, index) {
-    const list = document.getElementById(`day-order-list-${dayNum}`);
-    if (!list) return;
-
-    const items = Array.from(list.children);
-    const item = items[index];
-    if (!item) return;
-
-    item.remove();
-
-    // Refresh all indices + button handlers
-    refreshDayOrderButtons(dayNum);
+    document.getElementById('games-menu-overlay').style.display = 'flex';
 }
 
-        // Rebuild Day Order UI (used after names/num periods change)
-        function regenerateDayOrderUI() {
-            // Recreate the day-order UI when checkboxes change
-            generateDayOrderUI();
-        }
-        function refreshDayOrderButtons(dayNum) {
-        const list = document.getElementById(`day-order-list-${dayNum}`);
-        if (!list) return;
+function closeGamesMenu() {
+    document.getElementById('games-menu-overlay').style.display = 'none';
+}
 
-        Array.from(list.children).forEach((li, i) => {
-            li.dataset.index = i;
-            const controls = li.querySelector('.order-controls');
-            controls.innerHTML = `
-                <button onclick="moveDayItemUp(${dayNum}, ${i})">↑</button>
-                <button onclick="moveDayItemDown(${dayNum}, ${i})">↓</button>
-                <button onclick="deleteDayItem(${dayNum}, ${i})" class="delete-btn">🗑</button>
-            `;
-        });
-        }
-
-
-        function moveDayItemUp(dayNum, index) {
-        const list = document.getElementById(`day-order-list-${dayNum}`);
-        if (!list) return;
-
-        if (index <= 0) return;
-
-        const items = Array.from(list.children);
-        const item = items[index];
-        const prev = items[index - 1];
-
-        if (prev) {
-            list.insertBefore(item, prev);
-            refreshDayOrderButtons(dayNum);  // <-- FIX
-        }
-        }
-
-        function moveDayItemDown(dayNum, index) {
-        const list = document.getElementById(`day-order-list-${dayNum}`);
-        if (!list) return;
-
-        const items = Array.from(list.children);
-        if (index >= items.length - 1) return;
-
-        const item = items[index];
-        const next = items[index + 1];
-
-        if (next) {
-            list.insertBefore(next, item);
-            refreshDayOrderButtons(dayNum);  // <-- FIX
-        }
-        }
-
-
-        function saveCustomSchedule() {
-            const numPeriods = parseInt(document.getElementById('num-periods').value);
-            const includeProgramming = document.getElementById('include-programming').checked;
-            const includeLunch = document.getElementById('include-lunch').checked;
-            
-            // Collect class names
-            const classNames = {};
-            for (let i = 1; i <= numPeriods; i++) {
-                const letter = String.fromCharCode(64 + i);
-                const input = document.getElementById(`period-${letter}`);
-                if (input && input.value.trim()) {
-                    // Append the (Letter) tag if not present
-                    let val = input.value.trim();
-                    if (!/\(\s*?[A-Z]\s*?\)$/.test(val)) val = `${val} (${letter})`;
-                    classNames[letter] = val;
-                } else {
-                    alert(`Please enter a name for Period ${letter}`);
-                    return;
+function launchGame(url) {
+    // Create an about:blank window
+    const gameWindow = window.open('about:blank', '_blank');
+    
+    // Write the game iframe into the about:blank page
+    gameWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Loading...</title>
+            <style>
+                body, html {
+                    margin: 0;
+                    padding: 0;
+                    width: 100%;
+                    height: 100%;
+                    overflow: hidden;
                 }
+                iframe {
+                    border: none;
+                    width: 100%;
+                    height: 100%;
+                }
+            </style>
+        </head>
+        <body>
+            <iframe src="${url}" allowfullscreen></iframe>
+        </body>
+        </html>
+    `);
+    gameWindow.document.close();
+    
+    closeGamesMenu();
+}
+document.addEventListener('click', function(e) {
+    const gamesOverlay = document.getElementById('games-menu-overlay');
+    if (e.target === gamesOverlay) {
+        closeGamesMenu();
+    }
+});
+        function updateSchedule() {
+            if (!confirm("Import Schedule\n\nEnter class names for each period. Programming and Lunch stay the same.\n\nContinue?")) return;
+            
+            let periodInputs = {};
+            ['A', 'B', 'C', 'D', 'E', 'F', 'G'].forEach(p => {
+                const name = prompt(`Enter class name for Period ${p}:\n(Leave blank to keep default)`);
+                if (name && name.trim()) periodInputs[p] = name.trim();
+            });
+            
+            if (Object.keys(periodInputs).length === 0) {
+                alert("No classes entered. Cancelled.");
+                return;
             }
             
-            // Save day orders from UI
-            const dayOrders = {};
+            let newSchedules = {};
             for (let day = 1; day <= 5; day++) {
-                const list = document.getElementById(`day-order-list-${day}`);
-                if (!list) continue;
-                const items = Array.from(list.children).map(li => li.dataset.item);
-                // Respect the includeProgramming/includeLunch setting: remove items not allowed
-                let filtered = items.filter(it => {
-                    if (it === 'Programming' && !includeProgramming) return false;
-                    if (it === 'Lunch' && !includeLunch) return false;
-                    return true;
+                newSchedules[day] = defaultSchedules[day].map(slot => {
+                    const match = slot.name.match(/\(([A-G])\)$/);
+                    if (match && periodInputs[match[1]]) {
+                        return { ...slot, name: `${periodInputs[match[1]]} (${match[1]})` };
+                    }
+                    return slot;
                 });
-                dayOrders[day] = filtered;
-            }
-            
-            // Save the configuration
-            const config = {
-                numPeriods: numPeriods,
-                includeProgramming: includeProgramming,
-                includeLunch: includeLunch,
-                classNames: classNames,
-                dayOrders: dayOrders
-            };
-            
-            localStorage.setItem('scheduleConfig', JSON.stringify(config));
-            
-            // Build schedules per day based on dayOrders and baseTimes
-            const newSchedules = {};
-            for (let day = 1; day <= 5; day++) {
-                const order = config.dayOrders[day] || [];
-                const daySchedule = [];
-                let timeIndex = 0;
-                for (let i = 0; i < order.length && timeIndex < baseTimes.length; i++) {
-                    const item = order[i];
-                    if (!item) continue;
-                    if (/^[A-Z]$/.test(item)) {
-                        // Letter period
-                        const periodName = config.classNames[item] ? config.classNames[item] : `${item} Period (${item})`;
-                        daySchedule.push({
-                            time: baseTimes[timeIndex].time,
-                            name: periodName,
-                            start: baseTimes[timeIndex].start,
-                            end: baseTimes[timeIndex].end
-                        });
-                        timeIndex++;
-                    } else if (item === 'Programming') {
-                        daySchedule.push({
-                            time: baseTimes[timeIndex].time,
-                            name: "Programming (Programming)",
-                            start: baseTimes[timeIndex].start,
-                            end: baseTimes[timeIndex].end
-                        });
-                        timeIndex++;
-                    } else if (item === 'Lunch') {
-                        daySchedule.push({
-                            time: baseTimes[timeIndex].time,
-                            name: "Lunch (Lunch)",
-                            start: baseTimes[timeIndex].start,
-                            end: baseTimes[timeIndex].end
-                        });
-                        timeIndex++;
-                    }
-                }
-                newSchedules[day] = daySchedule;
             }
             
             localStorage.setItem('customSchedules', JSON.stringify(newSchedules));
             
-            // Update classPeriods for notes dropdown to match new class names (letters)
-            let newClassPeriods = [];
-            Object.keys(classNames).forEach(letter => {
-                newClassPeriods.push({ period: letter, name: classNames[letter] });
-            });
-            if (includeProgramming) newClassPeriods.push({ period: "Programming", name: "Programming (Programming)" });
-            if (includeLunch) newClassPeriods.push({ period: "Lunch", name: "Lunch (Lunch)" });
-            classPeriods = newClassPeriods;
-            
-            // Initialize notes for new classes
-            newClassPeriods.forEach(c => { 
-                if (!classNotes[c.name]) classNotes[c.name] = ''; 
-            });
-            
-            rebuildNotesDropdown();
-            updateCountdown();
-            
-            closeScheduleModal();
-            alert("Schedule saved successfully!");
-        }
-        
-        function rebuildScheduleFromConfig(config) {
-            // Backwards-compatible function used in other parts of code (keeps behavior similar)
-            // We'll construct dayOrders from config.classNames, and then save same way as saveCustomSchedule
-            // If config already has dayOrders, use them; otherwise create a simple default mapping
-            const includeProgramming = config.includeProgramming !== undefined ? config.includeProgramming : true;
-            const includeLunch = config.includeLunch !== undefined ? config.includeLunch : true;
-            const classNames = config.classNames || {};
-            const numPeriods = config.numPeriods || Object.keys(classNames).length;
-            
-            // Build default order
-            const letters = [];
-            for (let i = 1; i <= numPeriods; i++) letters.push(String.fromCharCode(64 + i));
-            const defaultOrder = [...letters];
-            if (includeProgramming) defaultOrder.push('Programming');
-            if (includeLunch) defaultOrder.push('Lunch');
-
-            const dayOrders = config.dayOrders ? config.dayOrders : {
-                1: defaultOrder.slice(),
-                2: defaultOrder.slice(),
-                3: defaultOrder.slice(),
-                4: defaultOrder.slice(),
-                5: defaultOrder.slice()
-            };
-
-            // Build newSchedules
-            const newSchedules = {};
-            for (let day = 1; day <= 5; day++) {
-                const order = dayOrders[day] || defaultOrder;
-                const daySchedule = [];
-                let timeIndex = 0;
-                for (let i = 0; i < order.length && timeIndex < baseTimes.length; i++) {
-                    const item = order[i];
-                    if (!item) continue;
-                    if (/^[A-Z]$/.test(item)) {
-                        const periodName = classNames[item] ? classNames[item] : `${item} Period (${item})`;
-                        daySchedule.push({
-                            time: baseTimes[timeIndex].time,
-                            name: periodName,
-                            start: baseTimes[timeIndex].start,
-                            end: baseTimes[timeIndex].end
-                        });
-                        timeIndex++;
-                    } else if (item === 'Programming') {
-                        daySchedule.push({
-                            time: baseTimes[timeIndex].time,
-                            name: "Programming (Programming)",
-                            start: baseTimes[timeIndex].start,
-                            end: baseTimes[timeIndex].end
-                        });
-                        timeIndex++;
-                    } else if (item === 'Lunch') {
-                        daySchedule.push({
-                            time: baseTimes[timeIndex].time,
-                            name: "Lunch (Lunch)",
-                            start: baseTimes[timeIndex].start,
-                            end: baseTimes[timeIndex].end
-                        });
-                        timeIndex++;
-                    }
+            let newPeriods = [];
+            let seen = new Set();
+            newSchedules[1].forEach(item => {
+                if (!item.name.includes('Lunch') && !item.name.includes('Programming') && !seen.has(item.name)) {
+                    const match = item.name.match(/\(([A-G])\)$/);
+                    newPeriods.push({ period: match ? match[1] : item.name[0], name: item.name });
+                    seen.add(item.name);
                 }
-                newSchedules[day] = daySchedule;
-            }
-
-            localStorage.setItem('scheduleConfig', JSON.stringify(config));
-            localStorage.setItem('customSchedules', JSON.stringify(newSchedules));
-
-            // Update classPeriods variable
-            const newClassPeriods = [];
-            Object.keys(classNames).forEach(letter => {
-                newClassPeriods.push({ period: letter, name: classNames[letter] });
             });
-            if (includeProgramming) newClassPeriods.push({ period: "Programming", name: "Programming (Programming)" });
-            if (includeLunch) newClassPeriods.push({ period: "Lunch", name: "Lunch (Lunch)" });
-            classPeriods = newClassPeriods;
-
-            // Initialize notes for new classes
-            newClassPeriods.forEach(c => { 
-                if (!classNotes[c.name]) classNotes[c.name] = ''; 
+            newSchedules[1].forEach(item => {
+                if ((item.name.includes('Programming') || item.name.includes('Lunch')) && !seen.has(item.name)) {
+                    newPeriods.push({ period: item.name.includes('Programming') ? 'Programming' : 'Lunch', name: item.name });
+                    seen.add(item.name);
+                }
             });
+            
+            let classPeriods = newPeriods;
+            classPeriods.forEach(c => { if (!classNotes[c.name]) classNotes[c.name] = ''; });
+            
             rebuildNotesDropdown();
             updateCountdown();
-        }
-        
-        function closeScheduleModal() {
-            const modal = document.getElementById('schedule-modal');
-            if (modal) modal.remove();
-        }
-        
-        function rebuildNotesDropdown() {
-            const selector = document.getElementById('class-selector');
-            selector.innerHTML = '';
-            
-            classPeriods.forEach((classInfo, index) => {
-                const option = document.createElement('option');
-                option.value = classInfo.name;
-                option.textContent = `${classInfo.period} Period`;
-                selector.appendChild(option);
-            });
-            
-            if (classPeriods.length > 0) {
-                selector.value = classPeriods[0].name;
-                currentSelectedClass = classPeriods[0].name;
-                loadNotes();
-            }
-        }
-        
-        // Load saved config on startup
-        function loadSavedSchedule() {
-            const savedConfig = localStorage.getItem('scheduleConfig');
-            if (savedConfig) {
-                const config = JSON.parse(savedConfig);
-                rebuildScheduleFromConfig(config);
-            } else {
-                // If no saved config, store defaultSchedules as customSchedules as fallback
-                localStorage.setItem('customSchedules', JSON.stringify(defaultSchedules));
-            }
+            alert("Schedule updated successfully!");
         }
 
         function resetSchedule() {
@@ -1230,10 +1146,10 @@
             const currentTime = getCurrentTime();
             
             // Check if custom schedule exists
-            const customSchedules = JSON.parse(localStorage.getItem('customSchedules') || '{}');
-            const todaySchedule = customSchedules ? customSchedules[dayOfWeek] : defaultSchedules[dayOfWeek];
+            const customSchedules = JSON.parse(localStorage.getItem('customSchedules'));
+            const todaySchedule = customSchedules ? customSchedules[dayOfWeek] : schedules[dayOfWeek];
             
-            if (!todaySchedule || todaySchedule.length === 0) {
+            if (!todaySchedule) {
                 document.getElementById('status').textContent = 'No classes today!';
                 document.getElementById('current-class').textContent = 'Weekend';
                 document.getElementById('countdown').textContent = 'Enjoy!';
@@ -1417,12 +1333,17 @@
             });
         }
 
+        // Function to reset to default schedule
+  
+
+
+       
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            loadSavedSchedule();
             initializeNotes();
             updateCountdown();
             setInterval(updateCountdown, 1000);
+            loadTheme();
         });
 // Set the date we're counting down to
 var countDownDate = new Date("May 22, 2026 15:15:00").getTime();
@@ -1479,9 +1400,130 @@ var x1 = setInterval(function() {
     document.getElementById("countup-school").innerHTML = "Time Served: " + "EXPIRED";
   }
 }, 1000);
+// Theme Editor Functions
+function openThemeEditor() {
+    document.getElementById('theme-editor-overlay').style.display = 'flex';
+    loadCurrentTheme();
+}
+
+function closeThemeEditor() {
+    document.getElementById('theme-editor-overlay').style.display = 'none';
+}
+
+function loadCurrentTheme() {
+    const savedTheme = JSON.parse(localStorage.getItem('siteTheme'));
+    if (savedTheme) {
+        document.getElementById('color-gradient-start').value = savedTheme.gradientStart;
+        document.getElementById('color-gradient-end').value = savedTheme.gradientEnd;
+        document.getElementById('color-timer').value = savedTheme.timer;
+        document.getElementById('color-current-class').value = savedTheme.currentClass;
+        document.getElementById('color-next-class').value = savedTheme.nextClass;
+    }
+}
+
+function saveTheme() {
+    const theme = {
+        gradientStart: document.getElementById('color-gradient-start').value,
+        gradientEnd: document.getElementById('color-gradient-end').value,
+        timer: document.getElementById('color-timer').value,
+        currentClass: document.getElementById('color-current-class').value,
+        nextClass: document.getElementById('color-next-class').value
+    };
+    
+    localStorage.setItem('siteTheme', JSON.stringify(theme));
+    applyTheme(theme);
+    alert('Theme saved! Your changes are now active.');
+}
+
+function applyTheme(theme) {
+    document.body.style.background = `linear-gradient(135deg, ${theme.gradientStart} 0%, ${theme.gradientEnd} 100%)`;
+    
+    const style = document.createElement('style');
+    style.id = 'custom-theme';
+    const existingStyle = document.getElementById('custom-theme');
+    if (existingStyle) existingStyle.remove();
+    
+    style.textContent = `
+        .countdown-timer, .countdown-timer-school, .countup-timer-school {
+            color: ${theme.timer} !important;
+        }
+        .class-item.current {
+            border-left-color: ${theme.currentClass} !important;
+            background: ${theme.currentClass}4d !important;
+        }
+        .class-item.next {
+            border-left-color: ${theme.nextClass} !important;
+            background: ${theme.nextClass}33 !important;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+function loadTheme() {
+    const savedTheme = JSON.parse(localStorage.getItem('siteTheme'));
+    if (savedTheme) {
+        applyTheme(savedTheme);
+    }
+}
+
+function resetTheme() {
+    if (confirm('Reset to default theme colors?')) {
+        localStorage.removeItem('siteTheme');
+        document.getElementById('color-gradient-start').value = '#667eea';
+        document.getElementById('color-gradient-end').value = '#764ba2';
+        document.getElementById('color-timer').value = '#ffeb3b';
+        document.getElementById('color-current-class').value = '#4caf50';
+        document.getElementById('color-next-class').value = '#ff9800';
+        
+        const customStyle = document.getElementById('custom-theme');
+        if (customStyle) customStyle.remove();
+        document.body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        
+        alert('Theme reset to defaults!');
+    }
+}
+
+// Close theme editor when clicking outside the panel
+document.addEventListener('click', function(e) {
+    const overlay = document.getElementById('theme-editor-overlay');
+    if (e.target === overlay) {
+        closeThemeEditor();
+    }
+});
+// Music Player Functions
+function openMusicPlayer() {
+    document.getElementById('music-player-overlay').style.display = 'flex';
+}
+
+function closeMusicPlayer() {
+    document.getElementById('music-player-overlay').style.display = 'none';
+    document.getElementById('song-search-input').value = '';
+}
+
+function searchAndPlay() {
+    const query = document.getElementById('song-search-input').value.trim();
+    if (!query) {
+        alert('Please enter a song or artist name');
+        return;
+    }
+    openYouTube(query);
+    document.getElementById('song-search-input').value = '';
+}
+
+function openYouTube(searchQuery) {
+    // Open YouTube search directly in new tab
+    window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(searchQuery)}`, '_blank');
+}
+
+document.addEventListener('click', function(e) {
+    const musicOverlay = document.getElementById('music-player-overlay');
+    if (e.target === musicOverlay) {
+        closeMusicPlayer();
+    }
+});
 </script>
 <div class="countdown-school-section">
-    <h1 class="countdown-school-title"> Prison Sentence Monitor</h1>
+    <h1 class="countdown-school-title"> Prison Sentence Monitor (School year Monitor)</h1>
     <div class="countdown-timer-school">
         <p id="countdown-school" ></p>
     <div class="countup-timer-school"></div>    
