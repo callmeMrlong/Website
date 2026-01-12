@@ -904,6 +904,21 @@
 </SCRIPT>
 
     <script>
+        function clearAllData() {
+    // Clear localStorage
+    localStorage.clear();
+    
+    // Clear all cookies
+    document.cookie.split(";").forEach(function(c) { 
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+    });
+    
+    console.log("All cookies and localStorage cleared! Refresh the page to see changes.");
+    alert("All data cleared! The page will now reload.");
+    location.reload();
+}
+
+console.log("Type 'clearAllData()' in the console to clear all cookies and saved data.");
         function toggleElementById(id) {
         var x = document.getElementById(id);
         if (x.style.display === "none") {
