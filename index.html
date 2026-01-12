@@ -474,6 +474,112 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+/* ICS Guide Styles */
+.ics-guide-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.ics-guide-panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 800px;
+    width: 90%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.ics-guide-title {
+    color: #333;
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.guide-step {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 15px;
+    border-left: 4px solid #667eea;
+}
+
+.guide-step-number {
+    display: inline-block;
+    background: #667eea;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 30px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.guide-step-title {
+    color: #333;
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.guide-step-description {
+    color: #555;
+    font-size: 1em;
+    line-height: 1.6;
+}
+
+.guide-image {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 10px;
+    margin: 15px auto;
+    display: block;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 2px solid #667eea;
+}
+
+.guide-highlight {
+    background: #ffeb3b;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: bold;
+    color: #333;
+}
+
+.guide-close-btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    background: #667eea;
+    color: white;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+}
+
+.guide-close-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    background: #764ba2;
+}
+
 /* Drag and Drop Styles */
 .drop-zone {
     position: fixed;
@@ -576,6 +682,9 @@
             <input type="file" id="ics-file-input" accept=".ics" style="display: none;" onchange="handleICSFile(event)">
         </div>
         <div>
+            <button onclick="openICSGuide()" class="button" id="ics-guide-button">❓ How to Get .ics File</button>
+        </div>
+        <div>
     <button onclick="openThemeEditor()" class="button" id="theme-editor-button">🎨 Edit Theme</button>
 </div>
         
@@ -619,6 +728,68 @@
         </div>
     </div>
 </div>
+
+<!-- ICS Guide Overlay -->
+<div id="ics-guide-overlay" class="ics-guide-overlay">
+    <div class="ics-guide-panel">
+        <div class="ics-guide-title">📅 How to Export Your .ics Schedule</div>
+        
+        <div class="guide-step">
+            <div class="guide-step-title">
+                <span class="guide-step-number">1</span>
+                Go to Your Schedule
+            </div>
+            <div class="guide-step-description">
+                Log into blackbuad and click on <span class="guide-highlight">Schedule</span> in the navigation menu.
+            </div>
+        </div>
+
+        <div class="guide-step">
+            <div class="guide-step-title">
+                <span class="guide-step-number">2</span>
+                Switch to Week View
+            </div>
+            <div class="guide-step-description">
+                On your schedule page, click the <span class="guide-highlight">Week</span> button in the top right corner to see your full weekly schedule. (Make sure the week you have selected has school all 5 days)
+            </div>
+        </div>
+
+        <div class="guide-step">
+            <div class="guide-step-title">
+                <span class="guide-step-number">3</span>
+                Open Share Menu
+            </div>
+            <div class="guide-step-description">
+                Click the <span class="guide-highlight">Share</span> button in the top left corner of the calendar view.
+            </div>
+        </div>
+
+        <div class="guide-step">
+            <div class="guide-step-title">
+                <span class="guide-step-number">4</span>
+                Export iCalendar Data
+            </div>
+            <div class="guide-step-description">
+                In the popup window, click <span class="guide-highlight">Export iCalendar data</span>. This will download a .ics file to your computer.
+            </div>
+        </div>
+
+        <div class="guide-step">
+            <div class="guide-step-title">
+                <span class="guide-step-number">5</span>
+                Import to Class Manager
+            </div>
+            <div class="guide-step-description">
+                Now you can either:
+                <br>• <strong>Drag and drop</strong> the .ics file anywhere on this page, OR
+                <br>• Press the <span class="guide-highlight">`</span> key and click <span class="guide-highlight">📅 Import .ics File</span> to browse for it
+            </div>
+        </div>
+
+        <button class="guide-close-btn" onclick="closeICSGuide()">Got it! Close Guide</button>
+    </div>
+</div>
+
 <div id="games-menu-overlay" class="games-menu-overlay">
     <div class="games-menu-panel">
         <div class="games-menu-title">🎮 Choose a Game</div>
@@ -727,17 +898,7 @@
     // Check if this is the first visit
     var hasVisited = localStorage.getItem("classManagerVisited");
     if (!hasVisited) {
-//
-//
-//
-//
-//
         alert("Welcome to Class Manager!\n\nQuick Start Guide:\n• Use the \"`\" key to show schedule settings\n• Press \"t\" and \"l\" together to show the games button\n• Drag and drop a .ics file anywhere to import your schedule!\n\nThis message will only show once.");
-//        
-//
-//
-//
-//
         localStorage.setItem("classManagerVisited", "true");
     }
 </SCRIPT>
@@ -755,6 +916,7 @@
             toggleElementById('update-schedule-button')
             toggleElementById('theme-editor-button')
             toggleElementById('import-ics-button')
+            toggleElementById('ics-guide-button')
             toggleElementById('buttons-section')
         //toggleElemntById('Id')
         }
@@ -1492,7 +1654,20 @@ document.addEventListener('click', function(e) {
     if (e.target === overlay) {
         closeThemeEditor();
     }
+    
+    const guideOverlay = document.getElementById('ics-guide-overlay');
+    if (e.target === guideOverlay) {
+        closeICSGuide();
+    }
 });
+
+function openICSGuide() {
+    document.getElementById('ics-guide-overlay').style.display = 'flex';
+}
+
+function closeICSGuide() {
+    document.getElementById('ics-guide-overlay').style.display = 'none';
+}
 
 function filterGames() {
     const searchInput = document.getElementById('games-search').value.toLowerCase();
