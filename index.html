@@ -228,7 +228,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
+            padding: 20px;
             margin-bottom: 10px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
@@ -297,7 +297,7 @@
 
         .notes-textarea {
             width: 100%;
-            min-height: 118px;
+            min-height: 133px;
             font-size: 1em;
             border: none;
             border-radius: 10px;
@@ -620,6 +620,121 @@
     font-size: 1.2em;
     opacity: 0.9;
 }
+.settings-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 999;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.settings-button.visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.settings-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Hover detection zone */
+.settings-hover-zone {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 150px;
+    height: 150px;
+    z-index: 998;
+    pointer-events: all;
+}
+
+/* Settings Menu Overlay */
+.settings-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.settings-menu-panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.settings-menu-title {
+    color: #333;
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.settings-button-item {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.settings-button-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.settings-close-btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    background: #666;
+    color: white;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.settings-close-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
 
         @media (max-width: 768px) {
             .container {
@@ -639,6 +754,42 @@
     </style>
 </head>
 <body>
+<!-- Settings Hover Zone -->
+<div class="settings-hover-zone" id="settings-hover-zone"></div>
+
+<!-- Settings Button -->
+<div class="settings-button" id="settings-button" onclick="openSettingsMenu()">
+    ⚙️
+</div>
+
+<!-- Settings Menu Overlay -->
+<div id="settings-menu-overlay" class="settings-menu-overlay">
+    <div class="settings-menu-panel">
+        <div class="settings-menu-title">⚙️ Settings</div>
+        
+        <button class="settings-button-item" onclick="openGames(); closeSettingsMenu();">
+            🎮 Play Games
+        </button>
+        
+        <button class="settings-button-item" onclick="updateSchedule(); closeSettingsMenu();">
+            📝 Import Schedule
+        </button>
+        
+        <button class="settings-button-item" onclick="document.getElementById('ics-file-input').click(); closeSettingsMenu();">
+            📅 Import .ics File
+        </button>
+        
+        <button class="settings-button-item" onclick="openICSGuide(); closeSettingsMenu();">
+            ❓ How to Get .ics File
+        </button>
+        
+        <button class="settings-button-item" onclick="openThemeEditor(); closeSettingsMenu();">
+            🎨 Edit Theme
+        </button>
+        
+        <button class="settings-close-btn" onclick="closeSettingsMenu()">Close Settings</button>
+    </div>
+</div>
     <!-- Drop Zone Overlay -->
     <div id="drop-zone" class="drop-zone">
         <div class="drop-zone-content">
@@ -957,8 +1108,6 @@ console.log("Type 'clearAllData()' in the console to clear all cookies and saved
         if (keysPressed['t']) {
                 if (keysPressed['l']){
                     toggleElementById('games-button');}
-        } else if (keysPressed['`']) {
-                toggleElements();
         }
         });
         document.addEventListener('keyup', (event) => {
@@ -1714,6 +1863,49 @@ function filterGames() {
         }
     });
 }
+// Settings button hover detection
+const settingsHoverZone = document.getElementById('settings-hover-zone');
+const settingsButton = document.getElementById('settings-button');
+
+settingsHoverZone.addEventListener('mouseenter', function() {
+    settingsButton.classList.add('visible');
+});
+
+settingsHoverZone.addEventListener('mouseleave', function() {
+    settingsButton.classList.remove('visible');
+});
+
+// Keep button visible when hovering over it
+settingsButton.addEventListener('mouseenter', function() {
+    settingsButton.classList.add('visible');
+});
+
+settingsButton.addEventListener('mouseleave', function(e) {
+    // Check if mouse is still in hover zone
+    const rect = settingsHoverZone.getBoundingClientRect();
+    if (e.clientX < rect.left || e.clientX > rect.right || 
+        e.clientY < rect.top || e.clientY > rect.bottom) {
+        settingsButton.classList.remove('visible');
+    }
+});
+
+function openSettingsMenu() {
+    document.getElementById('settings-menu-overlay').style.display = 'flex';
+}
+
+function closeSettingsMenu() {
+    document.getElementById('settings-menu-overlay').style.display = 'none';
+}
+
+// Close menu when clicking outside
+document.addEventListener('click', function(e) {
+    const settingsOverlay = document.getElementById('settings-menu-overlay');
+    if (e.target === settingsOverlay) {
+        closeSettingsMenu();
+    }
+});
+
+
 </script>
 <div class="countdown-school-section">
     <h1 class="countdown-school-title"> Prison Sentence Monitor (School year Monitor)</h1>
