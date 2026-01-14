@@ -1109,6 +1109,14 @@ console.log("Type 'clearAllData()' in the console to clear all cookies and saved
                 if (keysPressed['l']){
                     toggleElementById('games-button');}
         }
+        if (keysPressed['`']) {
+            if (document.getElementById('settings-menu-overlay').style.display = 'flex';) {
+                closeSettingsMenu()
+            } else {
+                openSettingsMenu()
+            }
+        }
+            
         });
         document.addEventListener('keyup', (event) => {
         delete keysPressed[event.key];
