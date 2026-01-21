@@ -730,6 +730,32 @@
     margin-top: 10px;
     transition: all 0.3s ease;
 }
+        .visitor-counter-section {
+    margin: 20px 30px 30px 30px;
+    text-align: center;
+}
+
+.visitor-counter-label {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.visitor-counter-display {
+    font-size: 2em;
+    font-weight: bold;
+    color: #ffeb3b;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+    font-family: 'Courier New', monospace;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    padding: 15px 25px;
+    border-radius: 10px;
+    display: inline-block;
+    min-width: 150px;
+}
 
 .settings-close-btn:hover {
     transform: translateY(-2px);
@@ -1917,11 +1943,47 @@ document.addEventListener('click', function(e) {
     <div class="countup-timer-school"></div>    
         <p id="countup-school" ></p>
     </div>
+    <div class="visitor-counter-section">
+        <p class="visitor-counter-label">Total Visitors:</p>
+        <div id="visitor-counter-display" class="visitor-counter-display">Loading...</div>
+    </div>
 </div>
 <!-- 
     ↓↓↓ GOAT COUNTER ↓↓↓
 -->
 <script data-goatcounter="https://troylong.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
+    <script>
+    // GoatCounter visitor count display
+    var t = setInterval(function() {
+        if (window.goatcounter && window.goatcounter.visit_count) {
+            clearInterval(t);
+            
+            // Get the visitor count and display it
+            fetch('https://troylong.goatcounter.com/counter//.json')
+                .then(response => response.json())
+                .then(data => {
+                    const totalVisits = data.count || 0;
+                    const displayElement = document.getElementById('visitor-counter-display');
+                    
+                    // Animate the number counting up
+                    let currentCount = 0;
+                    const increment = Math.ceil(totalVisits / 50);
+                    const counterInterval = setInterval(function() {
+                        currentCount += increment;
+                        if (currentCount >= totalVisits) {
+                            currentCount = totalVisits;
+                            clearInterval(counterInterval);
+                        }
+                        displayElement.textContent = currentCount.toLocaleString();
+                    }, 30);
+                })
+                .catch(error => {
+                    console.error('Error loading visitor count:', error);
+                    document.getElementById('visitor-counter-display').textContent = 'Error loading';
+                });
+        }
+    }, 100);
+</script>
 </body>
 </html>
