@@ -730,40 +730,7 @@
     margin-top: 10px;
     transition: all 0.3s ease;
 }
-        .visitor-counter-section {
-    margin: 20px 30px 30px 30px;
-    text-align: center;
-}
-
-.visitor-counter-label {
-    font-size: 1.5em;
-    font-weight: bold;
-    color: #ffffff;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.visitor-counter-display {
-    font-size: 2em;
-    font-weight: bold;
-    color: #ffeb3b;
-    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
-    font-family: 'Courier New', monospace;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(5px);
-    padding: 15px 25px;
-    border-radius: 10px;
-    display: inline-block;
-    min-width: 150px;
-}
-        .counter-number {
-    font-size: 1.8em;
-    font-weight: bold;
-    color: #ffeb3b;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    font-family: 'Courier New', monospace;
-}
-
+        
 .settings-close-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -1950,73 +1917,11 @@ document.addEventListener('click', function(e) {
     <div class="countup-timer-school"></div>    
         <p id="countup-school" ></p>
     </div>
-    <div class="countdown-school-section">
-    <div class="visitor-counter">
-    <div class="counter-icon">👁️</div>
-    <div class="counter-text">
-        <div class="counter-label">Total Visits</div>
-        <div class="counter-number" id="visit-count">Loading...</div>
-    </div>
-</div>
-    </div>
 </div>
 <!-- 
     ↓↓↓ GOAT COUNTER ↓↓↓
 -->
 <script data-goatcounter="https://troylong.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
-    <script>
-    // Fetch visit count from GoatCounter API
-async function updateGoatCounter() {
-    try {
-        const response = await fetch('https://troylong.goatcounter.com/api/v0/stats/total', {
-            headers: {
-                'Authorization': 'Bearer 215ywc51u3qyy8x6s44i9jkjpmvsmu9h2of2ryxyd5p9xs98'
-            }
-        });
-        const data = await response.json();
-        const totalVisits = data.total_count || 0;
-        document.getElementById('visit-count').textContent = totalVisits.toLocaleString();
-    } catch (error) {
-        console.error('GoatCounter fetch error:', error);
-        document.getElementById('visit-count').textContent = '---';
-    }
-}
-
-// Update counter when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    updateGoatCounter();
-});
-    // GoatCounter visitor count display
-    var t = setInterval(function() {
-        if (window.goatcounter && window.goatcounter.visit_count) {
-            clearInterval(t);
-            
-            // Get the visitor count and display it
-            fetch('https://troylong.goatcounter.com/counter//.json')
-                .then(response => response.json())
-                .then(data => {
-                    const totalVisits = data.count || 0;
-                    const displayElement = document.getElementById('visitor-counter-display');
-                    
-                    // Animate the number counting up
-                    let currentCount = 0;
-                    const increment = Math.ceil(totalVisits / 50);
-                    const counterInterval = setInterval(function() {
-                        currentCount += increment;
-                        if (currentCount >= totalVisits) {
-                            currentCount = totalVisits;
-                            clearInterval(counterInterval);
-                        }
-                        displayElement.textContent = currentCount.toLocaleString();
-                    }, 30);
-                })
-                .catch(error => {
-                    console.error('Error loading visitor count:', error);
-                    document.getElementById('visitor-counter-display').textContent = 'Error loading';
-                });
-        }
-    }, 100);
-</script>
-</body>
+    </body>
 </html>
