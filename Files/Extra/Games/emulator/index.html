@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GameLauncher</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <style>
+    /* ── Global ───────────────────────────────────────────── */
+    :root {
+      --bg:       #08080f;
+      --panel:    #0e0e1a;
+      --text:     #ddd8ff;
+      --muted:    #554466;
+
+      /* Flash = orange */
+      --flash:      #ff4400;
+      --flash-glow: #ff6622;
+
+      /* Retro = purple */
+      --retro:      #7700ff;
+      --retro-glow: #9933ff;
+      --retro2:     #00ccff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Share Tech Mono', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 16px 60px;
+    }
+
+    /* scanlines */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px, transparent 3px,
+        rgba(0,0,0,0.15) 3px, rgba(0,0,0,0.15) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── Header ───────────────────────────────────────────── */
+    header { text-align: center; margin-bottom: 28px; }
+
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      letter-spacing: 4px;
+      animation: flicker 8s infinite;
+    }
+
+    .logo .f { color: var(--flash);  text-shadow: 0 0 10px var(--flash-glow), 0 0 30px var(--flash-glow); }
+    .logo .r { color: var(--retro2); text-shadow: 0 0 10px var(--retro2),     0 0 30px rgba(0,204,255,0.4); }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.7rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      margin-top: 5px;
+    }
+
+    @keyframes flicker {
+      0%, 94%, 100% { opacity: 1; }
+      95% { opacity: 0.8; }
+      97.5% { opacity: 0.9; }
+    }
+
+    /* ── Tab switcher ─────────────────────────────────────── */
+    .tabs {
+      display: flex;
+      width: 100%;
+      max-width: 920px;
+      margin-bottom: 0;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 11px 0;
+      text-align: center;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      cursor: pointer;
+      border: 1px solid #221133;
+      border-bottom: none;
+      color: var(--muted);
+      background: #0a0a12;
+      transition: all 0.18s;
+      user-select: none;
+    }
+
+    .tab:hover { color: var(--text); }
+
+    .tab.flash-tab.active {
+      color: var(--flash);
+      border-color: var(--flash);
+      background: rgba(255,68,0,0.05);
+      text-shadow: 0 0 8px var(--flash-glow);
+    }
+
+    .tab.retro-tab.active {
+      color: var(--retro2);
+      border-color: var(--retro);
+      background: rgba(119,0,255,0.05);
+      text-shadow: 0 0 8px var(--retro2);
+    }
+
+    /* ── Shared container ─────────────────────────────────── */
+    .container {
+      width: 100%;
+      max-width: 920px;
+    }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ── Controls bar (shared style, color via .f- / .r-) ─── */
+    .ctrl-bar {
+      padding: 13px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .ctrl-bar label {
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* Flash ctrl bar */
+    .f-ctrl {
+      background: #100808;
+      border: 1px solid var(--flash);
+      border-bottom: none;
+      box-shadow: 0 0 18px rgba(255,68,0,0.12);
+    }
+    .f-ctrl label { color: #aa4422; }
+
+    /* Retro ctrl bar */
+    .r-ctrl {
+      background: #090814;
+      border: 1px solid var(--retro);
+      border-bottom: none;
+      box-shadow: 0 0 18px rgba(119,0,255,0.12);
+    }
+    .r-ctrl label { color: #664488; }
+
+    /* ── Select dropdowns ─────────────────────────────────── */
+    select {
+      flex: 1;
+      min-width: 160px;
+      background: var(--bg);
+      color: var(--text);
+      padding: 7px 30px 7px 10px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.82rem;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      transition: border-color 0.2s;
+    }
+
+    .f-select {
+      border: 1px solid #441100;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23ff4400' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+    }
+    .f-select:hover, .f-select:focus { border-color: var(--flash); box-shadow: 0 0 7px rgba(255,68,0,0.25); }
+    .f-select option { background: #1a0800; }
+
+    .r-select {
+      border: 1px solid #330055;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237700ff' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+    }
+    .r-select:hover, .r-select:focus { border-color: var(--retro); box-shadow: 0 0 7px rgba(119,0,255,0.25); }
+    .r-select option { background: #0a0015; }
+
+    /* ── Buttons ──────────────────────────────────────────── */
+    .btn {
+      border: none;
+      padding: 8px 18px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.67rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.15s;
+      white-space: nowrap;
+      color: #fff;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-flash         { background: var(--flash); }
+    .btn-flash:hover   { background: var(--flash-glow); box-shadow: 0 0 14px var(--flash-glow); }
+
+    .btn-retro         { background: var(--retro); }
+    .btn-retro:hover   { background: var(--retro-glow); box-shadow: 0 0 14px var(--retro-glow); }
+
+    .btn-outline-flash { background: transparent; border: 1px solid var(--flash); color: var(--flash); }
+    .btn-outline-flash:hover { background: rgba(255,68,0,0.08); box-shadow: 0 0 10px rgba(255,68,0,0.2); }
+
+    .btn-outline-retro { background: transparent; border: 1px solid var(--retro2); color: var(--retro2); }
+    .btn-outline-retro:hover { background: rgba(0,204,255,0.07); box-shadow: 0 0 10px rgba(0,204,255,0.2); }
+
+    /* ── Drop zone ────────────────────────────────────────── */
+    .drop-zone {
+      position: relative;
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+
+    .f-zone {
+      background: #050202;
+      border: 1px solid var(--flash);
+      border-top: 3px solid var(--flash);
+      box-shadow: 0 0 28px rgba(255,68,0,0.15), inset 0 0 60px rgba(0,0,0,0.8);
+    }
+
+    .r-zone {
+      background: #030208;
+      border: 1px solid var(--retro);
+      border-top: 3px solid var(--retro);
+      box-shadow: 0 0 28px rgba(119,0,255,0.15), inset 0 0 60px rgba(0,0,0,0.8);
+    }
+
+    .drop-zone.drag-over {
+      border-color: #00ff88 !important;
+      box-shadow: 0 0 50px rgba(0,255,136,0.3), inset 0 0 40px rgba(0,255,136,0.04) !important;
+    }
+
+    .placeholder {
+      text-align: center;
+      padding: 50px 20px;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .placeholder-icon {
+      font-size: 3.5rem;
+      margin-bottom: 14px;
+      opacity: 0.25;
+      transition: opacity 0.2s, filter 0.2s;
+    }
+
+    .f-zone .placeholder-icon { filter: drop-shadow(0 0 10px var(--flash)); }
+    .r-zone .placeholder-icon { filter: drop-shadow(0 0 10px var(--retro)); }
+
+    .drag-over .placeholder-icon { opacity: 0.95 !important; filter: drop-shadow(0 0 22px #00ff88) !important; }
+
+    .placeholder-main {
+      font-size: 0.82rem;
+      letter-spacing: 2px;
+      transition: color 0.2s;
+    }
+
+    .f-zone .placeholder-main { color: #662200; }
+    .r-zone .placeholder-main { color: #440066; }
+    .drag-over .placeholder-main { color: #00ff88 !important; }
+
+    .drag-hint {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 0.67rem;
+      letter-spacing: 2px;
+      transition: color 0.2s;
+    }
+
+    .f-zone .drag-hint { color: #331100; }
+    .r-zone .drag-hint { color: #220033; }
+    .drag-over .drag-hint { color: rgba(0,255,136,0.4) !important; }
+
+    .drag-hint-line {
+      flex: 1; max-width: 70px; height: 1px;
+      transition: background 0.2s;
+    }
+
+    .f-zone .drag-hint-line { background: #331100; }
+    .r-zone .drag-hint-line { background: #220033; }
+    .drag-over .drag-hint-line { background: rgba(0,255,136,0.25) !important; }
+
+    /* formats grid */
+    .formats {
+      margin-top: 18px;
+      display: flex; flex-wrap: wrap;
+      justify-content: center; gap: 5px;
+      max-width: 480px; margin-left: auto; margin-right: auto;
+    }
+
+    .fmt {
+      font-size: 0.58rem; padding: 2px 6px;
+      letter-spacing: 1px;
+    }
+
+    .f-fmt { border: 1px solid #330800; color: #441100; }
+    .r-fmt { border: 1px solid #1a0033; color: #330055; }
+
+    /* system badges (retro) */
+    .systems {
+      display: flex; flex-wrap: wrap; gap: 5px;
+      padding: 10px 20px;
+      background: #060610;
+      border: 1px solid var(--retro);
+      border-top: none; border-bottom: none;
+    }
+
+    .sys-badge {
+      font-size: 0.6rem; letter-spacing: 1px;
+      padding: 2px 7px;
+      border: 1px solid #220044; color: #440066;
+      background: rgba(119,0,255,0.03);
+      transition: all 0.2s;
+    }
+
+    .sys-badge.active {
+      border-color: var(--retro2); color: var(--retro2);
+      background: rgba(0,204,255,0.07);
+      box-shadow: 0 0 6px rgba(0,204,255,0.2);
+    }
+
+    /* ── Status bar ───────────────────────────────────────── */
+    .statusbar {
+      padding: 7px 20px;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      font-size: 0.68rem; color: var(--muted);
+      letter-spacing: 1px; flex-wrap: wrap; gap: 6px;
+      border-top: none;
+    }
+
+    .f-status { background: #0a0404; border: 1px solid var(--flash); }
+    .r-status { background: #060410; border: 1px solid var(--retro); }
+
+    .status-dot {
+      display: inline-block; width: 7px; height: 7px;
+      border-radius: 50%; background: #222; margin-right: 6px;
+      transition: all 0.3s;
+    }
+
+    .status-dot.active {
+      background: #00ff88;
+      box-shadow: 0 0 8px #00ff88;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    /* ── Info box ─────────────────────────────────────────── */
+    .info-box {
+      padding: 14px 20px;
+      font-size: 0.74rem; color: var(--muted);
+      line-height: 1.85;
+      border-top: none;
+    }
+
+    .f-info { background: #090404; border: 1px solid #2a0800; border-left: 3px solid var(--flash); }
+    .r-info { background: #060410; border: 1px solid #1a0033; border-left: 3px solid var(--retro); }
+
+    .info-box strong {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.6rem; letter-spacing: 2px;
+    }
+
+    .f-info strong { color: var(--flash); }
+    .r-info strong { color: var(--retro2); }
+
+    code {
+      padding: 1px 5px; font-family: 'Share Tech Mono', monospace;
+    }
+
+    .f-code { background: rgba(255,68,0,0.08); border: 1px solid #330800; color: #ff8855; }
+    .r-code { background: rgba(119,0,255,0.08); border: 1px solid #330055; color: #aa77ff; }
+
+    #swf-file-input, #rom-file-input { display: none; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="f">FLASH</span> &amp; <span class="r">RETRO</span><span style="color:#fff;text-shadow:0 0 10px #fff,0 0 20px rgba(255,255,255,0.2)">PLAYER</span>
+  </div>
+  <div class="subtitle">Ruffle Flash Emulator &bull; EmulatorJS libretro Cores</div>
+</header>
+
+<!-- ── Tab bar ──────────────────────────────────────────────── -->
+<div class="tabs">
+  <div class="tab flash-tab active" onclick="switchTab('flash')">⚡ FLASH PLAYER</div>
+  <div class="tab retro-tab"        onclick="switchTab('retro')">🎮 RETRO PLAYER</div>
+</div>
+
+<div class="container">
+
+  <!-- ════════════════════════════════════════════════════════
+       FLASH PANEL
+       ════════════════════════════════════════════════════════ -->
+  <div class="panel active" id="panel-flash">
+
+    <div class="ctrl-bar f-ctrl">
+      <label>SWF FILE:</label>
+      <select class="f-select" id="swf-select">
+        <option value="">— pick a .swf file —</option>
+      </select>
+      <button class="btn btn-flash"         onclick="launchSWF_dropdown()">&#9654; PLAY</button>
+      <input  type="file" id="swf-file-input" accept=".swf" onchange="launchSWF_picker(this)"/>
+      <button class="btn btn-outline-flash" onclick="document.getElementById('swf-file-input').click()">&#128193; OPEN FILE</button>
+    </div>
+
+    <div class="drop-zone f-zone" id="swf-drop">
+      <div class="placeholder">
+        <div class="placeholder-icon">⚡</div>
+        <p class="placeholder-main" id="swf-ph-text">DROP A .SWF FILE TO PLAY</p>
+        <div class="drag-hint">
+          <div class="drag-hint-line"></div>
+          OR USE THE CONTROLS ABOVE
+          <div class="drag-hint-line"></div>
+        </div>
+        <div class="formats">
+          <span class="fmt f-fmt">.swf</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="statusbar f-status">
+      <span><span class="status-dot" id="swf-dot"></span><span id="swf-status">IDLE</span></span>
+      <span id="swf-file-label">NO FILE LOADED</span>
+    </div>
+
+    <div class="info-box f-info">
+      <strong>FLASH — HOW TO USE</strong><br><br>
+      &#9654; <strong>DRAG &amp; DROP</strong> any <code class="f-code">.swf</code> file onto the zone above — opens in a new window instantly.<br>
+      &#9654; <strong>OPEN FILE</strong> browses your computer.<br>
+      &#9654; <strong>DROPDOWN</strong> — add filenames to <code class="f-code">SWF_FILES</code> in this HTML and put files in a <code class="f-code">swf/</code> folder.
+    </div>
+
+  </div><!-- /panel-flash -->
+
+
+  <!-- ════════════════════════════════════════════════════════
+       RETRO PANEL
+       ════════════════════════════════════════════════════════ -->
+  <div class="panel" id="panel-retro">
+
+    <div class="ctrl-bar r-ctrl">
+      <label>ROM FILE:</label>
+      <select class="r-select" id="rom-select">
+        <option value="">— pick a ROM file —</option>
+      </select>
+      <button class="btn btn-retro"         onclick="launchROM_dropdown()">&#9654; PLAY</button>
+      <input  type="file" id="rom-file-input"
+        accept=".gba,.gbc,.gb,.nes,.smc,.sfc,.snes,.n64,.z64,.v64,.nds,.psx,.bin,.iso,.cue,.md,.smd,.gen,.sms,.gg,.32x,.pce,.ws,.wsc,.zip,.rom,.img"
+        onchange="launchROM_picker(this)"/>
+      <button class="btn btn-outline-retro" onclick="document.getElementById('rom-file-input').click()">&#128193; OPEN ROM</button>
+      <div style="display:flex;align-items:center;gap:8px;font-size:0.7rem;color:var(--muted);letter-spacing:1px;flex-wrap:wrap;">
+        CORE:
+        <select class="r-select" id="core-override" style="min-width:auto;flex:unset;">
+          <option value="">Auto-detect</option>
+          <option value="gba">GBA</option>
+          <option value="gambatte">GB / GBC</option>
+          <option value="nes">NES</option>
+          <option value="snes">SNES</option>
+          <option value="n64">N64</option>
+          <option value="nds">NDS</option>
+          <option value="psx">PS1</option>
+          <option value="segaMD">Sega Genesis</option>
+          <option value="segaMS">Sega Master System</option>
+          <option value="segaGG">Game Gear</option>
+          <option value="sega32x">Sega 32X</option>
+          <option value="pce">PC Engine</option>
+          <option value="wswan">WonderSwan</option>
+          <option value="fbneo">Arcade (FBNeo)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="systems" id="systems-bar">
+      <span class="sys-badge">GBA</span><span class="sys-badge">GBC</span><span class="sys-badge">GB</span>
+      <span class="sys-badge">NES</span><span class="sys-badge">SNES</span><span class="sys-badge">N64</span>
+      <span class="sys-badge">NDS</span><span class="sys-badge">PS1</span><span class="sys-badge">SEGA MD</span>
+      <span class="sys-badge">SEGA MS</span><span class="sys-badge">GAME GEAR</span><span class="sys-badge">32X</span>
+      <span class="sys-badge">PC ENGINE</span><span class="sys-badge">WONDER SWAN</span><span class="sys-badge">ARCADE (FBNeo)</span>
+    </div>
+
+    <div class="drop-zone r-zone" id="rom-drop">
+      <div class="placeholder">
+        <div class="placeholder-icon">🎮</div>
+        <p class="placeholder-main" id="rom-ph-text">DROP A ROM FILE TO PLAY</p>
+        <div class="drag-hint">
+          <div class="drag-hint-line"></div>
+          OR USE THE CONTROLS ABOVE
+          <div class="drag-hint-line"></div>
+        </div>
+        <div class="formats">
+          <span class="fmt r-fmt">.gba</span><span class="fmt r-fmt">.gbc</span><span class="fmt r-fmt">.gb</span>
+          <span class="fmt r-fmt">.nes</span><span class="fmt r-fmt">.smc</span><span class="fmt r-fmt">.sfc</span>
+          <span class="fmt r-fmt">.n64</span><span class="fmt r-fmt">.z64</span><span class="fmt r-fmt">.nds</span>
+          <span class="fmt r-fmt">.psx</span><span class="fmt r-fmt">.bin</span><span class="fmt r-fmt">.iso</span>
+          <span class="fmt r-fmt">.md</span><span class="fmt r-fmt">.sms</span><span class="fmt r-fmt">.gg</span>
+          <span class="fmt r-fmt">.32x</span><span class="fmt r-fmt">.pce</span><span class="fmt r-fmt">.ws</span>
+          <span class="fmt r-fmt">.zip</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="statusbar r-status">
+      <span><span class="status-dot" id="rom-dot"></span><span id="rom-status">IDLE</span></span>
+      <span id="rom-file-label">NO ROM LOADED</span>
+    </div>
+
+    <div class="info-box r-info">
+      <strong>RETRO — HOW TO USE</strong><br><br>
+      &#9654; <strong>DRAG &amp; DROP</strong> any ROM file onto the zone above — opens in a new window.<br>
+      &#9654; <strong>OPEN ROM</strong> browses your computer.<br>
+      &#9654; <strong>DROPDOWN</strong> — add filenames to <code class="r-code">ROM_FILES</code> in this HTML, put files in a <code class="r-code">rom/</code> folder.<br>
+      &#9654; <strong>CORE</strong> is auto-detected from the file extension. Use the override if it guesses wrong.<br><br>
+      <strong>DEFAULT KEYS:</strong> Arrows = D-Pad &nbsp;|&nbsp; Z=A &nbsp;X=B &nbsp;A=X &nbsp;S=Y &nbsp;|&nbsp; Enter=Start &nbsp;Shift=Select &nbsp;Q/W=L/R
+    </div>
+
+  </div><!-- /panel-retro -->
+
+</div><!-- /container -->
+
+
+<!-- ══════════════════════════════════════════════════════════
+     FILE LISTS  — edit these to populate the dropdowns
+     ══════════════════════════════════════════════════════════ -->
+<script>
+  /* Put .swf files in a swf/ folder next to index.html */
+  const SWF_FILES = [
+    // "swf/example.swf",
+  ];
+
+  /* Put ROM files in a rom/ folder next to index.html */
+  const ROM_FILES = [
+    // "rom/pokemon.gba",
+    // "rom/mario.nes",
+  ];
+</script>
+
+<script>
+// ── Tab switcher ──────────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('.' + tab + '-tab').classList.add('active');
+  document.getElementById('panel-' + tab).classList.add('active');
+}
+
+// ── Populate dropdowns ────────────────────────────────────────
+function populateSelect(selectId, files, prefix, emptyMsg) {
+  const sel = document.getElementById(selectId);
+  if (files.length > 0) {
+    files.forEach(path => {
+      const opt = document.createElement('option');
+      opt.value = path;
+      opt.textContent = path.replace(prefix, '');
+      sel.appendChild(opt);
+    });
+  } else {
+    const opt = document.createElement('option');
+    opt.disabled = true;
+    opt.textContent = emptyMsg;
+    sel.appendChild(opt);
+  }
+}
+
+populateSelect('swf-select', SWF_FILES, 'swf/', '(no files listed — drag & drop or Open File)');
+populateSelect('rom-select', ROM_FILES, 'rom/', '(no ROMs listed — drag & drop or Open ROM)');
+
+// ── Status helpers ────────────────────────────────────────────
+function setStatus(dotId, textId, text, active) {
+  document.getElementById(textId).textContent = text;
+  document.getElementById(dotId).className = 'status-dot' + (active ? ' active' : '');
+}
+
+// ── Open a game in a new about:blank popup window ─────────────
+function openPopup(htmlContent, title) {
+  const w = window.open('about:blank', '_blank');
+  if (!w) { alert('Popup blocked! Please allow popups for this site.'); return null; }
+  w.document.open();
+  w.document.write(htmlContent);
+  w.document.close();
+  w.document.title = title || 'Loading...';
+  return w;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  FLASH / SWF
+// ══════════════════════════════════════════════════════════════
+
+function buildRufflePopup(src, isBlob, filename) {
+  // For blob URLs, we pass the URL string directly.
+  // For path-based URLs we need an absolute URL.
+  const srcAttr = isBlob ? src : (new URL(src, location.href)).href;
+  return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>Loading...</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { width:100%; height:100%; background:#000; overflow:hidden; }
+  ruffle-player { width:100%; height:100%; display:block; }
+  #msg { position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+         font-family:monospace; color:#ff6622; font-size:1rem; letter-spacing:3px;
+         background:#000; z-index:10; transition:opacity 0.4s; }
+</style>
+</head>
+<body>
+<div id="msg">LOADING FLASH...</div>
+<script src="https://unpkg.com/@ruffle-rs/ruffle"><\/script>
+<script>
+  window.addEventListener('load', function() {
+    const ruffle = window.RufflePlayer.newest();
+    const player = ruffle.createPlayer();
+    player.style.width  = '100%';
+    player.style.height = '100vh';
+    document.body.appendChild(player);
+    player.load("${srcAttr}");
+    player.addEventListener('loadeddata', function() {
+      document.title = "${filename.replace(/"/g, '')}";
+      var msg = document.getElementById('msg');
+      if (msg) { msg.style.opacity='0'; setTimeout(function(){ msg.remove(); }, 400); }
+    });
+  });
+<\/script>
+</body>
+</html>`;
+}
+
+function launchSWF(src, filename, isBlob) {
+  setStatus('swf-dot', 'swf-status', 'OPENING…', false);
+  document.getElementById('swf-file-label').textContent = filename.toUpperCase();
+  const popup = openPopup(buildRufflePopup(src, isBlob, filename), 'Loading...');
+  if (popup) setStatus('swf-dot', 'swf-status', 'LAUNCHED — ' + filename.toUpperCase(), true);
+}
+
+function launchSWF_dropdown() {
+  const path = document.getElementById('swf-select').value;
+  if (!path) { alert('Pick a .swf file from the dropdown first!'); return; }
+  launchSWF(path, path.replace('swf/', ''), false);
+}
+
+function launchSWF_picker(input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  if (!file.name.toLowerCase().endsWith('.swf')) { alert('Please select a .swf file!'); return; }
+  const url = URL.createObjectURL(file);
+  launchSWF(url, file.name, true);
+  input.value = '';
+}
+
+// SWF drag & drop
+(function() {
+  const zone = document.getElementById('swf-drop');
+  zone.addEventListener('dragover', e => {
+    e.preventDefault();
+    zone.classList.add('drag-over');
+    const t = document.getElementById('swf-ph-text');
+    if (t) t.textContent = 'DROP TO PLAY!';
+  });
+  zone.addEventListener('dragleave', e => {
+    if (!zone.contains(e.relatedTarget)) {
+      zone.classList.remove('drag-over');
+      const t = document.getElementById('swf-ph-text');
+      if (t) t.textContent = 'DROP A .SWF FILE TO PLAY';
+    }
+  });
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith('.swf')) { alert('That\'s not a .swf file!'); return; }
+    const url = URL.createObjectURL(file);
+    launchSWF(url, file.name, true);
+  });
+  // clicking the zone also opens file picker
+  zone.addEventListener('click', () => document.getElementById('swf-file-input').click());
+})();
+
+// ══════════════════════════════════════════════════════════════
+//  RETRO / ROM
+// ══════════════════════════════════════════════════════════════
+
+const CORE_MAP = {
+  gba:'gba', gbc:'gambatte', gb:'gambatte',
+  nes:'nes', smc:'snes', sfc:'snes', snes:'snes',
+  n64:'n64', z64:'n64', v64:'n64',
+  nds:'nds',
+  psx:'psx', bin:'psx', iso:'psx', cue:'psx', img:'psx',
+  md:'segaMD', smd:'segaMD', gen:'segaMD',
+  sms:'segaMS', gg:'segaGG', '32x':'sega32x',
+  pce:'pce', ws:'wswan', wsc:'wswan',
+};
+
+const CORE_TO_BADGE = {
+  gba:'GBA', gambatte:'GBC', nes:'NES', snes:'SNES',
+  n64:'N64', nds:'NDS', psx:'PS1',
+  segaMD:'SEGA MD', segaMS:'SEGA MS', segaGG:'GAME GEAR',
+  sega32x:'32X', pce:'PC ENGINE', wswan:'WONDER SWAN', fbneo:'ARCADE (FBNeo)'
+};
+
+function getCore(filename) {
+  const override = document.getElementById('core-override').value;
+  if (override) return override;
+  const ext = filename.split('.').pop().toLowerCase();
+  return CORE_MAP[ext] || null;
+}
+
+function highlightBadge(core) {
+  document.querySelectorAll('.sys-badge').forEach(b => b.classList.remove('active'));
+  const name = CORE_TO_BADGE[core];
+  if (!name) return;
+  document.querySelectorAll('.sys-badge').forEach(b => {
+    if (b.textContent.trim() === name) b.classList.add('active');
+  });
+}
+
+function buildEJSPopup(gameUrl, core, filename) {
+  return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>Loading...</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { width:100%; height:100%; background:#000; overflow:hidden; }
+  #game { width:100%; height:100%; }
+  #msg { position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+         font-family:monospace; color:#9933ff; font-size:1rem; letter-spacing:3px;
+         background:#000; z-index:999; }
+</style>
+</head>
+<body>
+<div id="msg">LOADING CORE...</div>
+<div id="game"></div>
+<script>
+  window.EJS_player        = '#game';
+  window.EJS_core          = '${core}';
+  window.EJS_gameUrl       = '${gameUrl}';
+  window.EJS_pathtodata    = 'https://cdn.emulatorjs.org/stable/data/';
+  window.EJS_startOnLoaded = true;
+  window.EJS_gameID        = 0;
+  window.EJS_ready = function() {
+    document.title = '${filename.replace(/'/g, '')}';
+    var msg = document.getElementById('msg');
+    if (msg) msg.remove();
+  };
+<\/script>
+<script src="https://cdn.emulatorjs.org/stable/data/loader.js"><\/script>
+</body>
+</html>`;
+}
+
+function launchROM(gameUrl, filename, core) {
+  if (!core) {
+    alert('Couldn\'t detect the system for "' + filename + '".\nPick a core from the override dropdown.');
+    return;
+  }
+  highlightBadge(core);
+  setStatus('rom-dot', 'rom-status', 'OPENING…', false);
+  document.getElementById('rom-file-label').textContent = filename.toUpperCase();
+  const popup = openPopup(buildEJSPopup(gameUrl, core, filename), 'Loading...');
+  if (popup) setStatus('rom-dot', 'rom-status', 'LAUNCHED — ' + core.toUpperCase(), true);
+}
+
+function launchROM_dropdown() {
+  const path = document.getElementById('rom-select').value;
+  if (!path) { alert('Pick a ROM from the dropdown first!'); return; }
+  const filename = path.replace('rom/', '');
+  const absURL = new URL(path, location.href).href;
+  launchROM(absURL, filename, getCore(filename));
+}
+
+function launchROM_picker(input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  const core = getCore(file.name);
+  const url  = URL.createObjectURL(file);
+  launchROM(url, file.name, core);
+  input.value = '';
+}
+
+// ROM drag & drop
+(function() {
+  const zone = document.getElementById('rom-drop');
+  zone.addEventListener('dragover', e => {
+    e.preventDefault();
+    zone.classList.add('drag-over');
+    const t = document.getElementById('rom-ph-text');
+    if (t) t.textContent = 'DROP TO PLAY!';
+  });
+  zone.addEventListener('dragleave', e => {
+    if (!zone.contains(e.relatedTarget)) {
+      zone.classList.remove('drag-over');
+      const t = document.getElementById('rom-ph-text');
+      if (t) t.textContent = 'DROP A ROM FILE TO PLAY';
+    }
+  });
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    const core = getCore(file.name);
+    const url  = URL.createObjectURL(file);
+    launchROM(url, file.name, core);
+  });
+  zone.addEventListener('click', () => document.getElementById('rom-file-input').click());
+})();
+</script>
+
+</body>
+</html>
