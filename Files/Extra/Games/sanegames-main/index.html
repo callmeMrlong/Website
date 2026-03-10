@@ -70,26 +70,6 @@
                 A better client for all CrazyGames games, with no ads or annoying UI.
             </h2>
         </div>
-
-        <section id="main-content" aria-label="Game loading options">
-            <h3>📌 Use the Bookmarklet (Recommended)</h3>
-            <p>
-                Drag this button to your bookmarks bar, then click it when you're on a CrazyGames game page:
-            </p>
-            <div style="text-align: center; margin: 0.8em 0;">
-                <a href="javascript:(function(){const s='sanegames.elouan.xyz',h=window.location.hostname,f=window.location.href;if(h===s){alert('Hey, don\'t CLICK me here, DRAG me to your bookmarks bar!')}else{const r=/crazygames\.(?:com|id|dev|co\.uk|net|org|[a-z]{2})\/game\/([^\/?#]+)/,m=f.match(r);if(m&&m[1]){const g=m[1],n=`https://sanegames.elouan.xyz/?game=${g}`;window.location.href=n}else{alert('Please navigate to a CrazyGames game page first, then click the bookmarklet.')}}})();"
-                    class="bookmarklet-button" draggable="true"
-                    onclick="event.preventDefault(); alert('Hey, don\'t CLICK me here, DRAG me to your bookmarks bar!');"
-                    role="button"
-                    aria-label="Drag to bookmarks bar to install SaneGames bookmarklet">
-                    ▶️ Play Sane
-                </a>
-            </div>
-            <p style="text-align: center; font-size: 0.85em; margin-top: 0.8em;">
-                Then go to <a href="https://www.crazygames.com/" rel="noopener noreferrer">CrazyGames</a> and click the bookmarklet on any game!
-            </p>
-        </section>
-
         <section>
             <h3>⌨️ Or Enter Game Slug Manually</h3>
             <p>
