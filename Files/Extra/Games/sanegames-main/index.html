@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>SaneGames - Play CrazyGames Without Ads</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+
+    <meta name="description" content="A better client for all CrazyGames games, with no ads or annoying UI. Free, open source, and fast." />
+    <meta name="keywords" content="games, free games, online games, no ads, crazygames, client, wrapper, open source" />
+    <meta name="author" content="SaneGames (Elouan Grimm)" />
+    <meta name="theme-color" content="#5335CC" />
+
+    <meta property="og:title" content="SaneGames - Play CrazyGames Without Ads" />
+    <meta property="og:description" content="A better client for all CrazyGames games, with no ads or annoying UI." />
+    <meta property="og:image" content="assets/thumbnail.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sanegames.elouan.xyz/" />
+    <meta property="og:site_name" content="SaneGames" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="SaneGames - Play CrazyGames Without Ads" />
+    <meta name="twitter:description" content="A better client for all CrazyGames games, with no ads or annoying UI." />
+    <meta name="twitter:image" content="assets/thumbnail.png" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "SaneGames",
+      "description": "A better client for all CrazyGames games, with no ads or annoying UI.",
+      "url": "https://sanegames.elouan.xyz/",
+      "image": "https://sanegames.elouan.xyz/assets/thumbnail.png",
+      "applicationCategory": "GameApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "Elouan Grimm"
+      }
+    }
+    </script>
+
+    <script>
+        !function (e, t) { var s, r, o, i; t.__SV || (window.posthog = t, t._i = [], t.init = function (n, a, p) { function g(e, t) { var s = t.split("."); 2 == s.length && (e = e[s[0]], t = s[1]), e[t] = function () { e.push([t].concat(Array.prototype.slice.call(arguments, 0))) } } (o = e.createElement("script")).type = "text/javascript", o.crossOrigin = "anonymous", o.async = !0, o.src = a.api_host.replace(".i.posthog.com", "-assets.i.posthog.com") + "/static/array.js", (i = e.getElementsByTagName("script")[0]).parentNode.insertBefore(o, i); var c = t; for (void 0 !== p ? c = t[p] = [] : p = "posthog", c.people = c.people || [], c.toString = function (e) { var t = "posthog"; return "posthog" !== p && (t += "." + p), e || (t += " (stub)"), t }, c.people.toString = function () { return c.toString(1) + ".people (stub)" }, s = "init bs ws ge fs capture De Ai $s register register_once register_for_session unregister unregister_for_session Is getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty xs Ss createPersonProfile Es gs opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing ys debug ks getPageViewId captureTraceFeedback captureTraceMetric".split(" "), r = 0; r < s.length; r++)g(c, s[r]); t._i.push([n, a, p]) }, t.__SV = 1) }(document, window.posthog || []),
+            posthog.init("phc_W4DPbbp1Qbz4lPVtWrFF54GFUabBHpKzNJx9U6fryBZ", {
+                api_host: "https://posthog.elouan.xyz/ingest",
+                ui_host: "https://us.posthog.com",
+                person_profiles: "always",
+            });
+    </script>
+
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="loader" id="loader" aria-label="Loading game...">Loading…</div>
+
+    <main class="loader" id="gameInput">
+        <div class="hero-section">
+            <img src="assets/logo.png" alt="SaneGames Logo" style="width:60px; display:block; margin: 0 auto 0.5em auto;" />
+            <h1>Welcome to <b>SaneGames.</b></h1>
+            <h2 id="tagline">
+                A better client for all CrazyGames games, with no ads or annoying UI.
+            </h2>
+        </div>
+
+        <section id="main-content" aria-label="Game loading options">
+            <h3>📌 Use the Bookmarklet (Recommended)</h3>
+            <p>
+                Drag this button to your bookmarks bar, then click it when you're on a CrazyGames game page:
+            </p>
+            <div style="text-align: center; margin: 0.8em 0;">
+                <a href="javascript:(function(){const s='sanegames.elouan.xyz',h=window.location.hostname,f=window.location.href;if(h===s){alert('Hey, don\'t CLICK me here, DRAG me to your bookmarks bar!')}else{const r=/crazygames\.(?:com|id|dev|co\.uk|net|org|[a-z]{2})\/game\/([^\/?#]+)/,m=f.match(r);if(m&&m[1]){const g=m[1],n=`https://sanegames.elouan.xyz/?game=${g}`;window.location.href=n}else{alert('Please navigate to a CrazyGames game page first, then click the bookmarklet.')}}})();"
+                    class="bookmarklet-button" draggable="true"
+                    onclick="event.preventDefault(); alert('Hey, don\'t CLICK me here, DRAG me to your bookmarks bar!');"
+                    role="button"
+                    aria-label="Drag to bookmarks bar to install SaneGames bookmarklet">
+                    ▶️ Play Sane
+                </a>
+            </div>
+            <p style="text-align: center; font-size: 0.85em; margin-top: 0.8em;">
+                Then go to <a href="https://www.crazygames.com/" rel="noopener noreferrer">CrazyGames</a> and click the bookmarklet on any game!
+            </p>
+        </section>
+
+        <section>
+            <h3>⌨️ Or Enter Game Slug Manually</h3>
+            <p>
+                Find a game on <a href="https://www.crazygames.com/" rel="noopener noreferrer">CrazyGames</a>. Copy the slug from the URL (e.g., <code>crazy-flips-3d</code>) and paste below.
+            </p>
+            <div style="display: flex; gap: 8px; justify-content: center; align-items: flex-end; flex-wrap: wrap; margin: 1em 0;">
+                <div>
+                    <label for="gameSlugInput" class="input-label">Game Slug:</label>
+                    <input type="text" placeholder="e.g., crazy-flips-3d" id="gameSlugInput" aria-label="Game slug input field. Press Enter or click Play Game to load." />
+                </div>
+                <button onclick="loadGameFromInput()" aria-label="Load and play the entered game">Play Game</button>
+            </div>
+        </section>
+
+        <footer>
+            <p>
+                <i>PS: SaneGames is
+                    <a href="https://github.com/sanegamz/sanegamz.github.io" rel="noopener noreferrer">Open Source</a>!</i>
+            </p>
+            <nav aria-label="Footer links">
+                <a href="/privacypolicy">Privacy Policy</a> | SaneGames is not affiliated with CrazyGames or other IP in any way.
+            </nav>
+        </footer>
+    </main>
+	<div id="recommendationsPopup">
+		<h2>Game Recommendations</h2>
+		<p>Below are a few half-decent games.</p>
+		<ul>
+			<li>
+				<a href="?game=ragdoll-archers" onclick="closeRecommendations()">Ragdoll Archers</a>
+			</li>
+			<li>
+				<a href="?game=havendock" onclick="closeRecommendations()">Havendock</a>
+			</li>
+			<li>
+				<a href="?game=crazy-flips-3d" onclick="closeRecommendations()">Crazy Flips 3D</a>
+			</li>
+		</ul>
+
+		<h3 onclick="closeRecommendations()" style="cursor: pointer; color: #e0d9ff;">Close</h3>
+	</div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>
