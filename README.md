@@ -5,3 +5,5 @@
 To open the settings move mouse towards the top right corrner.
 ## [Link to website](https://callmemrlong.github.io/Website/)
 
+Credits:
+thanks to @elouangrimm for making sane games.
