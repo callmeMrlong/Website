@@ -844,6 +844,7 @@ settingsButton.addEventListener('mouseleave', function(e) {
 
 function openSettingsMenu() {
     document.getElementById('settings-menu-overlay').style.display = 'flex';
+    settingsButton.classList.remove('visible');
 }
 
 function closeSettingsMenu() {
