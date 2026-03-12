@@ -6,17 +6,16 @@
 // ============================================================
 const GAMES = [
     { text: "Ships 3d", slug: "ships-3d" },
-    { text: "Open Front", slug: "openfront-gsw" },
-    { text: "8 Ball Pool", slug: "8-ball-pool-wyr" },
+    //{ text: "Open Front", slug: "openfront-gsw" },
+    //{ text: "8 Ball Pool", slug: "8-ball-pool-wyr" },
     { text: "Table Tennis World Tour", slug: "table-tennis-world-tour" },
-    { text: "Cozy Golf", slug: "cozy-golf" },
-    { text: "PolyTrack", slug: "polytrack" },
+    //{ text: "Cozy Golf", slug: "cozy-golf" },
+    //{ text: "PolyTrack", slug: "polytrack" },
     { text: "Poxel.io", slug: "poxel-io"},
     { text: "Voxiom.io", slug: "voxiom-io"},
     { text: "Doodle Road", slug: "doodle-road"},
-    { text: "Veck", slug: "veck-io"},
-    { text: "World's Hardest Game", slug: "worlds-hardest-game"},
-    // ← Add more lines here, same format
+    //{ text: "Veck", slug: "veck-io"},
+    //{ text: "World's Hardest Game", slug: "worlds-hardest-game"},
 ];
 
 // Ad domains to block inside the game window
