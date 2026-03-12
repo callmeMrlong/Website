@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>SaneGames</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content="Play CrazyGames without ads." />
+    <meta name="theme-color" content="#5335CC" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <div class="page">
+
+        <!-- Header -->
+        <header>
+            <img src="assets/logo.png" alt="SaneGames Logo" class="logo" />
+            <div class="header-text">
+                <h1>Sane<span class="purple">Games</span></h1>
+                <p class="subtitle">CrazyGames — no ads, no nonsense.</p>
+            </div>
+        </header>
+
+        <!-- Game grid -->
+        <main>
+            <div class="section-label">Pick a game</div>
+            <div id="gameGrid" class="game-grid">
+                <!-- Buttons are added here by main.js -->
+            </div>
+
+            <!-- Manual slug entry -->
+            <div class="manual-area">
+                <button id="manualBtn" class="manual-toggle-btn" onclick="toggleManualPanel()">
+                    ⌨️ Enter Slug Manually
+                </button>
+
+                <div id="manualPanel" class="manual-panel">
+                    <p class="panel-hint">
+                        Go to <a href="https://www.crazygames.com" target="_blank" rel="noopener">CrazyGames</a>,
+                        find a game, and copy the last part of the URL.<br>
+                        <span class="example">e.g. crazygames.com/game/<b>crazy-flips-3d</b></span>
+                    </p>
+                    <div class="slug-row">
+                        <input type="text" id="slugInput" placeholder="crazy-flips-3d" />
+                        <button onclick="openGameFromInput()">Play</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <a href="https://github.com/elouangrimm/sanegames" rel="noopener noreferrer">Open Source</a>
+            &nbsp;·&nbsp;
+            <a href="/privacypolicy">Privacy Policy</a>
+            &nbsp;·&nbsp; Not affiliated with CrazyGames.
+        </footer>
+
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

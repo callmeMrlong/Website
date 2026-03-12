@@ -1,0 +1,254 @@
+/* ── Reset & base ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f172a 0%, #1a1f35 60%, #1a2744 100%);
+    background-attachment: fixed;
+    color: #f1f5f9;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* ── Page layout ──────────────────────────────────────────── */
+.page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* ── Header ───────────────────────────────────────────────── */
+header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(100, 116, 139, 0.2);
+}
+
+.logo {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+}
+
+.header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+h1 {
+    margin: 0;
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #fff;
+}
+
+.purple {
+    background: linear-gradient(135deg, #5335CC, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+/* ── Section label ────────────────────────────────────────── */
+.section-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 0.75rem;
+}
+
+/* ── Game grid ────────────────────────────────────────────── */
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.75rem;
+}
+
+.game-btn {
+    padding: 0.85rem 1rem;
+    border: 1px solid rgba(83, 53, 204, 0.35);
+    border-radius: 10px;
+    background: rgba(83, 53, 204, 0.12);
+    color: #e2e8f0;
+    font-size: 0.92rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s, border-color 0.15s, transform 0.12s;
+    line-height: 1.3;
+}
+
+.game-btn:hover {
+    background: rgba(83, 53, 204, 0.28);
+    border-color: rgba(167, 139, 250, 0.6);
+    transform: translateY(-1px);
+}
+
+.game-btn:active {
+    background: rgba(83, 53, 204, 0.4);
+    transform: translateY(0);
+}
+
+.game-btn:focus {
+    outline: 2px solid #a78bfa;
+    outline-offset: 2px;
+}
+
+/* ── Manual entry area ────────────────────────────────────── */
+.manual-area {
+    margin-top: 1rem;
+    position: relative;
+}
+
+.manual-toggle-btn {
+    padding: 0.6rem 1.1rem;
+    border: 1px solid rgba(100, 116, 139, 0.35);
+    border-radius: 8px;
+    background: rgba(30, 41, 59, 0.6);
+    color: #cbd5e1;
+    font-size: 0.88rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.manual-toggle-btn:hover {
+    background: rgba(51, 65, 85, 0.8);
+    border-color: rgba(100, 116, 139, 0.6);
+    color: #f1f5f9;
+}
+
+.manual-toggle-btn:focus {
+    outline: 2px solid #a78bfa;
+    outline-offset: 2px;
+}
+
+/* Manual panel (hidden by default, shown when .open) */
+.manual-panel {
+    display: none;
+    margin-top: 0.75rem;
+    padding: 1.1rem 1.2rem;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(100, 116, 139, 0.25);
+    border-radius: 10px;
+    backdrop-filter: blur(8px);
+}
+
+.manual-panel.open {
+    display: block;
+}
+
+.panel-hint {
+    margin: 0 0 0.9rem 0;
+    font-size: 0.85rem;
+    color: #94a3b8;
+    line-height: 1.5;
+}
+
+.panel-hint a {
+    color: #a78bfa;
+    text-decoration: underline;
+}
+
+.panel-hint a:hover {
+    color: #d8b4fe;
+}
+
+.example {
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+.example b {
+    color: #a78bfa;
+}
+
+.slug-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+input[type="text"] {
+    flex: 1;
+    min-width: 160px;
+    padding: 0.55rem 0.9rem;
+    border: 1px solid rgba(100, 116, 139, 0.4);
+    border-radius: 6px;
+    background: rgba(30, 41, 59, 0.8);
+    color: #f1f5f9;
+    font-size: 0.9rem;
+    font-family: inherit;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+input[type="text"]::placeholder { color: #475569; }
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: #5335CC;
+    background: rgba(30, 41, 59, 1);
+}
+
+.slug-row button {
+    padding: 0.55rem 1.2rem;
+    border: 1px solid #5335CC;
+    border-radius: 6px;
+    background: #5335CC;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    white-space: nowrap;
+}
+
+.slug-row button:hover  { background: #6842d6; border-color: #6842d6; }
+.slug-row button:active { background: #4527b3; }
+.slug-row button:focus  { outline: 2px solid #a78bfa; outline-offset: 2px; }
+
+/* ── Footer ───────────────────────────────────────────────── */
+footer {
+    font-size: 0.8rem;
+    color: #475569;
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+footer a {
+    color: #64748b;
+    text-decoration: underline;
+    transition: color 0.15s;
+}
+
+footer a:hover { color: #94a3b8; }
+
+/* ── Mobile ───────────────────────────────────────────────── */
+@media (max-width: 480px) {
+    .page { padding: 1.25rem 1rem 3rem; }
+    .game-grid { grid-template-columns: 1fr 1fr; }
+    h1 { font-size: 1.4rem; }
+}
