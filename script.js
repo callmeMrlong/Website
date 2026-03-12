@@ -709,11 +709,14 @@ function closeThemeEditor() {
 function loadCurrentTheme() {
     const savedTheme = JSON.parse(localStorage.getItem('siteTheme'));
     if (savedTheme) {
-        document.getElementById('color-gradient-start').value = savedTheme.gradientStart;
-        document.getElementById('color-gradient-end').value = savedTheme.gradientEnd;
-        document.getElementById('color-timer').value = savedTheme.timer;
-        document.getElementById('color-current-class').value = savedTheme.currentClass;
-        document.getElementById('color-next-class').value = savedTheme.nextClass;
+        document.getElementById('color-gradient-start').value = savedTheme.gradientStart || '#667eea';
+        document.getElementById('color-gradient-end').value = savedTheme.gradientEnd || '#764ba2';
+        document.getElementById('color-timer').value = savedTheme.timer || '#ffeb3b';
+        document.getElementById('color-current-class').value = savedTheme.currentClass || '#4caf50';
+        document.getElementById('color-next-class').value = savedTheme.nextClass || '#ff9800';
+        document.getElementById('bg-image-url').value = savedTheme.bgImageUrl || '';
+        document.getElementById('bg-image-size').value = savedTheme.bgImageSize || 'cover';
+        document.getElementById('bg-image-enabled').checked = savedTheme.bgImageEnabled || false;
     }
 }
 
@@ -723,22 +726,54 @@ function saveTheme() {
         gradientEnd: document.getElementById('color-gradient-end').value,
         timer: document.getElementById('color-timer').value,
         currentClass: document.getElementById('color-current-class').value,
-        nextClass: document.getElementById('color-next-class').value
+        nextClass: document.getElementById('color-next-class').value,
+        bgImageUrl: document.getElementById('bg-image-url').value,
+        bgImageSize: document.getElementById('bg-image-size').value,
+        bgImageEnabled: document.getElementById('bg-image-enabled').checked,
+        bgImageData: localStorage.getItem('bgImageUploadData') || null
     };
-    
-    localStorage.setItem('siteTheme', JSON.stringify(theme));
-    applyTheme(theme);
-    alert('Theme saved! Your changes are now active.');
+
+    // Handle file upload — convert it to base64 and save
+    const fileInput = document.getElementById('bg-image-upload');
+    if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            theme.bgImageData = e.target.result;
+            localStorage.setItem('bgImageUploadData', e.target.result);
+            localStorage.setItem('siteTheme', JSON.stringify(theme));
+            applyTheme(theme);
+            alert('Theme saved!');
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+    } else {
+        localStorage.setItem('siteTheme', JSON.stringify(theme));
+        applyTheme(theme);
+        alert('Theme saved!');
+    }
 }
 
 function applyTheme(theme) {
-    document.body.style.background = `linear-gradient(135deg, ${theme.gradientStart} 0%, ${theme.gradientEnd} 100%)`;
-    
+    // Decide background: image or gradient
+    if (theme.bgImageEnabled) {
+        const imageSource = theme.bgImageData || theme.bgImageUrl;
+        if (imageSource) {
+            document.body.style.background = 'none';
+            document.body.style.backgroundImage = `url('${imageSource}')`;
+            document.body.style.backgroundSize = theme.bgImageSize || 'cover';
+            document.body.style.backgroundPosition = 'center';
+            document.body.style.backgroundRepeat = 'no-repeat';
+            document.body.style.backgroundAttachment = 'fixed';
+        }
+    } else {
+        document.body.style.backgroundImage = '';
+        document.body.style.background = `linear-gradient(135deg, ${theme.gradientStart} 0%, ${theme.gradientEnd} 100%)`;
+    }
+
     const style = document.createElement('style');
     style.id = 'custom-theme';
     const existingStyle = document.getElementById('custom-theme');
     if (existingStyle) existingStyle.remove();
-    
+
     style.textContent = `
         .countdown-timer, .countdown-timer-school, .countup-timer-school {
             color: ${theme.timer} !important;
@@ -768,15 +803,19 @@ function loadTheme() {
 function resetTheme() {
     if (confirm('Reset to default theme colors?')) {
         localStorage.removeItem('siteTheme');
+        localStorage.removeItem('bgImageUploadData');
         document.getElementById('color-gradient-start').value = '#667eea';
         document.getElementById('color-timer').value = '#ffeb3b';
         document.getElementById('color-current-class').value = '#4caf50';
         document.getElementById('color-next-class').value = '#ff9800';
-        
+        document.getElementById('bg-image-url').value = '';
+        document.getElementById('bg-image-enabled').checked = false;
+
         const customStyle = document.getElementById('custom-theme');
         if (customStyle) customStyle.remove();
+        document.body.style.backgroundImage = '';
         document.body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-        
+
         alert('Theme reset to defaults!');
     }
 }
