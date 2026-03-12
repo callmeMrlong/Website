@@ -13,7 +13,7 @@ const GAMES = [
     //{ text: "PolyTrack", slug: "polytrack" },
     { text: "Poxel.io", slug: "poxel-io"},
     { text: "Voxiom.io", slug: "voxiom-io"},
-    { text: "Doodle Road", slug: "doodle-road"},
+    { text: "Doodle Road", slug: "doodle-road"}
     //{ text: "Veck", slug: "veck-io"},
     //{ text: "World's Hardest Game", slug: "worlds-hardest-game"},
 ];
