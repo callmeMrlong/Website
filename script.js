@@ -752,27 +752,30 @@ function saveTheme() {
 }
 
 function applyTheme(theme) {
-    // Decide background: image or gradient
     if (theme.bgImageEnabled) {
         const imageSource = theme.bgImageData || theme.bgImageUrl;
         if (imageSource) {
-            document.body.style.background = 'none';
+            document.body.style.background = '';
             document.body.style.backgroundImage = `url('${imageSource}')`;
-            document.body.style.backgroundSize = theme.bgImageSize || 'cover';
+            document.body.style.backgroundSize = 'cover';
             document.body.style.backgroundPosition = 'center';
             document.body.style.backgroundRepeat = 'no-repeat';
             document.body.style.backgroundAttachment = 'fixed';
         }
     } else {
-        document.body.style.backgroundImage = '';
+        document.body.style.backgroundImage = 'none';
+        document.body.style.backgroundSize = '';
+        document.body.style.backgroundPosition = '';
+        document.body.style.backgroundRepeat = '';
+        document.body.style.backgroundAttachment = '';
         document.body.style.background = `linear-gradient(135deg, ${theme.gradientStart} 0%, ${theme.gradientEnd} 100%)`;
     }
 
-    const style = document.createElement('style');
-    style.id = 'custom-theme';
     const existingStyle = document.getElementById('custom-theme');
     if (existingStyle) existingStyle.remove();
 
+    const style = document.createElement('style');
+    style.id = 'custom-theme';
     style.textContent = `
         .countdown-timer, .countdown-timer-school, .countup-timer-school {
             color: ${theme.timer} !important;
