@@ -715,7 +715,6 @@ function loadCurrentTheme() {
         document.getElementById('color-current-class').value = savedTheme.currentClass || '#4caf50';
         document.getElementById('color-next-class').value = savedTheme.nextClass || '#ff9800';
         document.getElementById('bg-image-url').value = savedTheme.bgImageUrl || '';
-        document.getElementById('bg-image-size').value = savedTheme.bgImageSize || 'cover';
         document.getElementById('bg-image-enabled').checked = savedTheme.bgImageEnabled || false;
     }
 }
@@ -728,7 +727,7 @@ function saveTheme() {
         currentClass: document.getElementById('color-current-class').value,
         nextClass: document.getElementById('color-next-class').value,
         bgImageUrl: document.getElementById('bg-image-url').value,
-        bgImageSize: document.getElementById('bg-image-size').value,
+        bgImageSize: 'cover',
         bgImageEnabled: document.getElementById('bg-image-enabled').checked,
         bgImageData: localStorage.getItem('bgImageUploadData') || null
     };
