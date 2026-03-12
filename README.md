@@ -7,3 +7,4 @@ To open the settings move mouse towards the top right corrner.
 
 Credits:
 thanks to @elouangrimm for making sane games.
+@DaNoob8157 - commits [b504f35](https://github.com/callmeMrlong/Website/commit/b504f35e195709f43afc96d0818bb635cba17e84) and [a84ad40](https://github.com/callmeMrlong/Website/commit/a84ad4036ea405d859784c655f66f0b6e3964083) ***README.md* edits**
