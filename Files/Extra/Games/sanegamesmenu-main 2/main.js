@@ -70,7 +70,7 @@ function openGame(slug) {
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>SaneGames</title>
+    <title>Loading...</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
