@@ -125,7 +125,31 @@
             <label>Next Class Highlight:</label>
             <input type="color" id="color-next-class" value="#ff9800">
         </div>
-        
+        <div class="theme-control">
+    <label>Background Image or GIF (URL):</label>
+    <input type="text" id="bg-image-url" placeholder="Paste image/GIF URL here..." style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; font-size:0.95em; box-sizing:border-box;">
+</div>
+
+<div class="theme-control">
+    <label>Or Upload from your computer:</label>
+    <input type="file" id="bg-image-upload" accept="image/*,.gif" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ccc; background:white; cursor:pointer;">
+</div>
+
+<div class="theme-control">
+    <label>Background Size:</label>
+    <select id="bg-image-size" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; font-size:0.95em;">
+        <option value="cover">Cover (fills screen)</option>
+        <option value="contain">Contain (fits inside)</option>
+        <option value="auto">Original Size</option>
+    </select>
+</div>
+
+<div class="theme-control">
+    <label>
+        <input type="checkbox" id="bg-image-enabled" style="margin-right:8px;">
+        Use image/GIF as background (uncheck to use gradient instead)
+    </label>
+</div>
         <div class="theme-buttons">
             <button class="theme-btn theme-btn-save" onclick="saveTheme()">Save Theme</button>
             <button class="theme-btn theme-btn-reset" onclick="resetTheme()">Reset</button>
