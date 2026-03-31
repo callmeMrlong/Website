@@ -652,6 +652,7 @@ console.log("Type 'clearAllData()' in the console to clear all cookies and saved
             updateCountdown();
             setInterval(updateCountdown, 1000);
             loadTheme();
+            loadLunchMenu();
         });
 
 var countDownDate = new Date("May 22, 2026 15:15:00").getTime();
@@ -899,3 +900,43 @@ document.addEventListener('click', function(e) {
         closeSettingsMenu();
     }
 });
+async function loadLunchMenu() {
+    try {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const url = `https://wsa.api.flikisdining.com/menu/api/weeks/school/knox-hall-middle-upper/menu-type/lunch/${year}/${month}/${day}/?format=json`;
+
+        const res = await fetch(url);
+        const data = await res.json();
+
+        const todayStr = `${year}-${month}-${day}`;
+        const todayData = data.days.find(d => d.date === todayStr);
+
+        if (!todayData || todayData.menu_items.length === 0) {
+            document.getElementById('lunch-menu-content').innerHTML = '<p style="opacity:0.7">No menu today</p>';
+            return;
+        }
+
+        let html = '';
+        let currentSection = '';
+
+        todayData.menu_items.forEach(item => {
+            if (item.is_station_header) {
+                currentSection = item.text;
+                html += `<div style="font-weight:bold; margin-top:10px; opacity:0.8; font-size:0.85em; text-transform:uppercase; letter-spacing:1px;">${item.text}</div>`;
+            } else if (item.food) {
+                const cal = item.food.rounded_nutrition_info?.calories;
+                html += `<div style="padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.1); display:flex; justify-content:space-between;">
+                    <span>${item.food.name}</span>
+                    <span style="opacity:0.6; font-size:0.9em">${cal ? cal + ' cal' : ''}</span>
+                </div>`;
+            }
+        });
+
+        document.getElementById('lunch-menu-content').innerHTML = html;
+    } catch (e) {
+        document.getElementById('lunch-menu-content').innerHTML = '<p style="opacity:0.7">Could not load menu</p>';
+    }
+}
