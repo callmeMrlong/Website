@@ -906,6 +906,10 @@ async function loadLunchMenu() {
         const year = today.getFullYear();
         const month = String(today.getMonth() + 1).padStart(2, '0');
         const day = String(today.getDate()).padStart(2, '0');
+        console.log(day);
+        console.log(month);
+        console.log(year);
+        console.log(today);
         const url = `https://wsa.api.flikisdining.com/menu/api/weeks/school/knox-hall-middle-upper/menu-type/lunch/${year}/${month}/${day}/?format=json`;
 
         const res = await fetch(url);
