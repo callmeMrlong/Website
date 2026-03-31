@@ -913,8 +913,7 @@ async function loadLunchMenu() {
         const url = `https://wsa.api.flikisdining.com/menu/api/weeks/school/knox-hall-middle-upper/menu-type/lunch/${year}/${month}/${day}/?format=json`;
         console.log(url);
         
-        const res = fetch("https://proxy.corsfix.com/?https://wsa.api.flikisdining.com/menu/api/weeks/school/knox-hall-middle-upper/menu-type/lunch/2026/03/31/?format=json")
-  .then(response => response.json())
+        const res = fetch(url);
         console.log(res);
         const data = await res.json();
 
