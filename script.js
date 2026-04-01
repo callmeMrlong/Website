@@ -910,10 +910,10 @@ async function loadLunchMenu() {
         console.log(month);
         console.log(year);
         console.log(today);
-        const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
+        const url = `https://wsa.api.flikisdining.com/menu/api/weeks/school/knox-hall-middle-upper/menu-type/lunch/${year}/${month}/${day}/?format=json`;
         console.log(url);
         
-        const res = fetch(url);
+        const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
         console.log(res);
         const data = await res.json();
 
